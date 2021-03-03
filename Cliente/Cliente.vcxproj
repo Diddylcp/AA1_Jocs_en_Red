@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -155,9 +155,14 @@
   <ItemGroup>
     <ClCompile Include="cliente.cpp" />
     <ClCompile Include="PeerClient.cpp" />
+    <ClCompile Include="TcpSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="InputMemoryStream.h" />
+    <ClInclude Include="OutputMemoryStream.h" />
     <ClInclude Include="PeerClient.h" />
+    <ClInclude Include="TcpSocket.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
