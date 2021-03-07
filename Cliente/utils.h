@@ -6,6 +6,9 @@ struct Port
 	unsigned short port;
 
 	Port() {};
+	Port(Port& _port) {
+		port = _port.port;
+	}
 	Port(unsigned short _port) {
 		port = _port;
 	}
@@ -15,6 +18,9 @@ struct IpAddress {
 	sf::IpAddress ip;
 
 	IpAddress() {};
+	IpAddress(IpAddress& _ip) {
+		ip = _ip.ip;
+	}
 	IpAddress(std::string _ip) {
 		ip = sf::IpAddress(_ip);
 	}
