@@ -15,7 +15,6 @@ TcpSocket::~TcpSocket()
     delete (tcpSocket);
 }
 
-
 Status TcpSocket::Connect(std::string _ip, Port _port)
 {
     sf::Socket::Status sockStatus = tcpSocket->connect(_ip, _port.port);
@@ -45,27 +44,27 @@ void TcpSocket::Disconnect()
 
 sf::TcpSocket* TcpSocket::GetSocket()
 {
-    return nullptr;
+    return tcpSocket;
 }
 
 void TcpSocket::SetSocket(sf::TcpSocket* _tcpSocket)
 {
-
+    tcpSocket = _tcpSocket;
 }
 
 std::string TcpSocket::GetRemoteIP()
 {
-    return std::string();
+    return tcpSocket->getRemoteAddress().toString();
 }
 
 Port TcpSocket::GetRemotePort()
 {
-    return Port();
+    return tcpSocket->getRemotePort();
 }
 
 Port TcpSocket::GetLocalPort()
 {
-    return Port();
+    return tcpSocket->getLocalPort();
 }
 
 Status TcpSocket::Send(OutputMemoryStream& _oms)
