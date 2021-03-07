@@ -11,6 +11,6 @@ public:
 	sf::TcpListener* GetListener();
 	Status Listen(Port _port);
 	Status Accept(TcpSocket* _socket);
-	void Disconect();
+	void Disconnect();
 };
 

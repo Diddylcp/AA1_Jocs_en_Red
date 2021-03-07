@@ -46,7 +46,7 @@ void PeerClient::RecepcionClient(TcpSocket* sock)
 				clientes.push_back(&newClient);
 			}
 		}
-		listener.Disconect();
+		listener.Disconnect();
 	}
 }
 
@@ -93,7 +93,7 @@ void PeerClient::RecepcionMessages()
 			}
 		}
 	}
-	listener.Disconect();
+	listener.Disconnect();
 }
 
 void PeerClient::SendMessages()

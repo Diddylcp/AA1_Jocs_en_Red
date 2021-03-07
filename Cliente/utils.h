@@ -5,7 +5,7 @@ struct Port
 {
 	unsigned short port;
 
-	Port();
+	Port() {};
 	Port(unsigned short _port) {
 		port = _port;
 	}
@@ -14,7 +14,7 @@ struct Port
 struct IpAddress {
 	sf::IpAddress ip;
 
-	IpAddress();
+	IpAddress() {};
 	IpAddress(std::string _ip) {
 		ip = sf::IpAddress(_ip);
 	}
@@ -36,7 +36,7 @@ enum class Message_Protocol
 
 };
 
-Status GetStatus(sf::Socket::Status _status)
+static Status GetStatus(sf::Socket::Status _status)
 {
     Status status;
     switch (_status)
@@ -76,7 +76,7 @@ struct DataCliente {
 	{
 		std::string ipStr;
 		packet >> ipStr;
-		cliente.ipAddress = IpAddress(ipStr);
+		cliente.ipAddress = ipStr;
 		packet >> cliente.port;
 		return packet;
 	}

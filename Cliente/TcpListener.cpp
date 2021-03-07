@@ -25,7 +25,7 @@ Status TcpListener::Accept(TcpSocket* _socket)
 	return Status(listener->accept(*_socket->GetSocket()));
 }
 
-void TcpListener::Disconect()
+void TcpListener::Disconnect()
 {
 	listener->close();
 }
