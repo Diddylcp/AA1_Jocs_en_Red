@@ -155,12 +155,16 @@
   <ItemGroup>
     <ClCompile Include="cliente.cpp" />
     <ClCompile Include="PeerClient.cpp" />
+    <ClCompile Include="Selector.cpp" />
+    <ClCompile Include="TcpListener.cpp" />
     <ClCompile Include="TcpSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputMemoryStream.h" />
     <ClInclude Include="OutputMemoryStream.h" />
     <ClInclude Include="PeerClient.h" />
+    <ClInclude Include="Selector.h" />
+    <ClInclude Include="TcpListener.h" />
     <ClInclude Include="TcpSocket.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>

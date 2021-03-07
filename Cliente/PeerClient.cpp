@@ -1,29 +1,29 @@
 #include "PeerClient.h"
 
-void PeerClient::RecepcionClient(sf::TcpSocket* sock)
+void PeerClient::RecepcionClient(TcpSocket* sock)
 {
-	sf::Socket::Status status;
+	Status status;
 	while (loop)
 	{
 		sf::Packet pack;
-		myPort = sock->getLocalPort();
-		status = sock->receive(pack);
+		port = sock->GetLocalPort();
+		status = sock->Receive(pack);
 
-		if (status == sf::Socket::Done) {
+		if (status == Status::Done) {
 			DataCliente aux;
 			pack >> aux;
-			std::cout << aux.ip << ":" << aux.port << std::endl;
-			if (aux.ip == sf::IpAddress::LocalHost) {
+			std::cout << aux.ipAddress.ip << ":" << aux.port << std::endl;
+			if (aux.ipAddress.ip == sf::IpAddress::LocalHost) {
 
-				sock->disconnect();
+				sock->Disconnect();
 				std::cout << "He recibido el LocalHost\n";
 				break;
 			}
 			else {
-				sf::TcpSocket* socket = new sf::TcpSocket;
-				status = socket->connect(aux.ip, aux.port);
+				TcpSocket* socket = new TcpSocket;
+				status = socket->Connect(aux.ipAddress.ip.toString(), aux.port);
 
-				if (status != sf::Socket::Status::Done) {
+				if (status != Status::Done) {
 					break;
 				}
 
@@ -31,76 +31,75 @@ void PeerClient::RecepcionClient(sf::TcpSocket* sock)
 
 			}
 		}
-		else if (status == sf::Socket::Disconnected) {
+		else if (status == Status::Disconnected) {
 			break;
 		}
 
 	}
-	if (status == sf::Socket::Done) {
+	if (status == Status::Done) {
 		//sf::TcpListener listener;
-		sf::Socket::Status status = listener.listen(myPort);
+		Status status = listener.Listen(port);
 		while (clientes.size() < 3) {
-			sf::TcpSocket* newClient = new sf::TcpSocket;
-			status = listener.accept(*newClient);
-			if (status == sf::Socket::Done) {
-				clientes.push_back(newClient);
+			TcpSocket newClient;
+			status = listener.Accept(&newClient);
+			if (status == Status::Done) {
+				clientes.push_back(&newClient);
 			}
 		}
-		listener.close();
+		listener.Disconect();
 	}
-	
 }
 
 void PeerClient::RecepcionMessages()
 {
 	bool running = true;
-	sf::Socket::Status status;
-	sf::SocketSelector selector;
+	Status status;
+	Selector selector;
 	for (size_t i = 0; i < clientes.size(); i++)
 	{
-		selector.add(*clientes[i]);
+		selector.Add(clientes[i]);
 	}
 	//selector.add(listener);
 
 	while (loop) {
 		// Make the selector wait for data on any socket
-		if (selector.wait())
+		if (selector.Wait())
 		{
 			for (size_t i = 0; i < clientes.size(); i++)
 			{
-				if (selector.isReady(*clientes[i]))
+				if (selector.IsReady(clientes[i]))
 				{
 					// The client has sent some data, we can receive it
 					sf::Packet packet;
-					status = clientes[i]->receive(packet);
-					if (status == sf::Socket::Done)
+					status = clientes[i]->Receive(packet);
+					if (status == Status::Done)
 					{
 						std::string strRec;
 						packet >> strRec;
-						std::cout << "He recibido " << strRec << " del puerto " << clientes[i]->getRemotePort() << std::endl;
+						std::cout << "He recibido " << strRec << " del puerto " << clientes[i]->GetRemotePort().port << std::endl;
 					}
-					else if (status == sf::Socket::Disconnected)
+					else if (status == Status::Disconnected)
 					{
-						selector.remove(*clientes[i]);
+						selector.Remove(clientes[i]);
 						loop = false;
 						std::cout << "Elimino el socket que se ha desconectado\n";
 					}
 					else
 					{
 						loop = false;
-						std::cout << "Error al recibir de " << clientes[i]->getRemotePort() << std::endl;
+						std::cout << "Error al recibir de " << clientes[i]->GetRemotePort().port << std::endl;
 					}
 				}
 			}
 		}
 	}
-	listener.close();
+	listener.Disconect();
 }
 
 void PeerClient::SendMessages()
 {
 	
-	sf::Socket::Status status;
+	Status status;
 
 	while (loop) {
 		std::string message;
@@ -111,9 +110,9 @@ void PeerClient::SendMessages()
 
 		for (size_t i = 0; i < clientes.size(); i++)
 		{
-			status = clientes[i]->send(packet);
+			status = clientes[i]->Send(packet);
 
-			if (status == sf::Socket::Status::Disconnected || message == "exit")
+			if (status == Status::Disconnected || message == "exit")
 			{
 				loop = false;
 				break;

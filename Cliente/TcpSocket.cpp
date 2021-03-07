@@ -1,9 +1,8 @@
 #include "TcpSocket.h"
 
-
 TcpSocket::TcpSocket()
 {
-
+    tcpSocket = new sf::TcpSocket();
 }
 
 TcpSocket::TcpSocket(sf::TcpSocket* _tcpSocket)
@@ -20,35 +19,28 @@ TcpSocket::~TcpSocket()
 Status TcpSocket::Connect(std::string _ip, Port _port)
 {
     sf::Socket::Status sockStatus = tcpSocket->connect(_ip, _port.port);
-    Status status;
+    return GetStatus(sockStatus);
+}
 
-    switch (sockStatus)
-    {
-    case sf::Socket::Done:
-        status = Status::Done;
-        break;
-    case sf::Socket::NotReady:
-        status = Status::NotReady;
-        break;
-    case sf::Socket::Partial:
-        status = Status::Partial;
-        break;
-    case sf::Socket::Disconnected:
-        status = Status::Disconnected;
-        break;
-    case sf::Socket::Error:
-        status = Status::Error;
-        break;
-    default:
-        break;
-    }
+Status TcpSocket::Receive(sf::Packet _pack)
+{
+    return GetStatus(tcpSocket->receive(_pack));
+}
 
-    return status;
+Status TcpSocket::Receive(InputMemoryStream* _ims)
+{
+    char* data = new char;
+    std::size_t size = 0;
+    std::size_t received = 0;
+
+    Status s = GetStatus(tcpSocket->receive(data, size, received));
+    _ims->Read(data, size);
+    return s;
 }
 
 void TcpSocket::Disconnect()
 {
-
+    tcpSocket->disconnect();
 }
 
 sf::TcpSocket* TcpSocket::GetSocket()
@@ -58,6 +50,7 @@ sf::TcpSocket* TcpSocket::GetSocket()
 
 void TcpSocket::SetSocket(sf::TcpSocket* _tcpSocket)
 {
+
 }
 
 std::string TcpSocket::GetRemoteIP()
@@ -75,14 +68,9 @@ Port TcpSocket::GetLocalPort()
     return Port();
 }
 
-InputMemoryStream* TcpSocket::Recieve()
-{
-    return nullptr;
-}
-
 Status TcpSocket::Send(OutputMemoryStream& _oms)
 {
-    sf::Socket::Status sockStatus;// = tcpSocket->send();
+    sf::Socket::Status sockStatus = tcpSocket->send(_oms.GetBufferPtr(), _oms.GetLength());
     return GetStatus(sockStatus);
 }
 
@@ -90,29 +78,4 @@ Status TcpSocket::Send(sf::Packet& _packet)
 {
     sf::Socket::Status sockStatus = tcpSocket->send(_packet);
     return GetStatus(sockStatus);
-}
-
-Status GetStatus(sf::Socket::Status _status) 
-{
-    Status status;
-    switch (_status)
-    {
-    case sf::Socket::Done:
-        status = Status::Done;
-        break;
-    case sf::Socket::NotReady:
-        status = Status::NotReady;
-        break;
-    case sf::Socket::Partial:
-        status = Status::Partial;
-        break;
-    case sf::Socket::Disconnected:
-        status = Status::Disconnected;
-        break;
-    case sf::Socket::Error:
-        status = Status::Error;
-        break;
-    default:
-        break;
-    }
 }

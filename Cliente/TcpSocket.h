@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML/Network.hpp>
+
 #include "InputMemoryStream.h"
 #include "OutputMemoryStream.h"
 #include "utils.h"
@@ -19,7 +19,10 @@ public:
 	Port GetRemotePort();
 	Port GetLocalPort();
 	Status Connect(std::string _ip, Port _port);
-	InputMemoryStream* Recieve();
+
+	Status Receive(sf::Packet _pack);
+	Status Receive(InputMemoryStream* _ims);
+
 	Status Send(sf::Packet& _packet);
 	Status Send(OutputMemoryStream& _oms);
 
