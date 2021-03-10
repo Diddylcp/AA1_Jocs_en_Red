@@ -21,7 +21,7 @@ Status TcpSocket::Connect(std::string _ip, Port _port)
     return GetStatus(sockStatus);
 }
 
-Status TcpSocket::Receive(sf::Packet _pack)
+Status TcpSocket::Receive(sf::Packet& _pack)
 {
     return GetStatus(tcpSocket->receive(_pack));
 }

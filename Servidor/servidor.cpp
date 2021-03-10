@@ -90,6 +90,7 @@ bool Servidor() {
 				status = newClient->send(packet);
 				clientes.push_back(newClient);
 				clientesData.push_back(DataCliente(newClient->getRemoteAddress(), newClient->getRemotePort()));
+				std::cout << newClient->getRemoteAddress() << ":" << newClient->getRemotePort() << "  " << aux.ip.toString();
 				newClient->disconnect();
 
 			}

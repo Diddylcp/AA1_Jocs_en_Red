@@ -37,7 +37,6 @@ void PeerClient::RecepcionClient(TcpSocket* sock)
 
 	}
 	if (status == Status::Done) {
-		//sf::TcpListener listener;
 		Status status = listener.Listen(port);
 		while (clientes.size() < 3) {
 			TcpSocket newClient;
@@ -59,7 +58,6 @@ void PeerClient::RecepcionMessages()
 	{
 		selector.Add(clientes[i]);
 	}
-	//selector.add(listener);
 
 	while (loop) {
 		// Make the selector wait for data on any socket

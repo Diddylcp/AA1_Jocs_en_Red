@@ -20,7 +20,7 @@ public:
 	Port GetLocalPort();
 	Status Connect(std::string _ip, Port _port);
 
-	Status Receive(sf::Packet _pack);
+	Status Receive(sf::Packet &_pack);
 	Status Receive(InputMemoryStream* _ims);
 
 	Status Send(sf::Packet& _packet);

@@ -52,6 +52,7 @@ int main() {
 		delete myClients.clientes[i];
 	}
 	myClients.clientes.clear();
+	system("pause");
 	return 0;
 }
 

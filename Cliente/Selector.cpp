@@ -1,4 +1,5 @@
 #include "Selector.h"
+#include <iostream>
 
 Selector::Selector()
 {
@@ -12,6 +13,7 @@ Selector::~Selector()
 void Selector::Add(TcpSocket* _socket)
 {
 	ss.add(*_socket->GetSocket());
+	//std::cout << _socket->GetRemoteIP() << ":" << _socket->GetRemotePort().port << std::endl;
 }
 
 void Selector::Add(TcpListener* _listener)
