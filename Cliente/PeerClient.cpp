@@ -39,10 +39,10 @@ void PeerClient::RecepcionClient(TcpSocket* sock)
 	if (status == Status::Done) {
 		Status status = listener.Listen(port);
 		while (clientes.size() < 3) {
-			TcpSocket newClient;
-			status = listener.Accept(&newClient);
+			TcpSocket* newClient = new TcpSocket;
+			status = listener.Accept(newClient);
 			if (status == Status::Done) {
-				clientes.push_back(&newClient);
+				clientes.push_back(newClient);
 			}
 		}
 		listener.Disconnect();

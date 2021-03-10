@@ -28,9 +28,12 @@ Status TcpSocket::Receive(sf::Packet& _pack)
 
 Status TcpSocket::Receive(InputMemoryStream* _ims)
 {
-    char* data = new char;
-    std::size_t size = 0;
-    std::size_t received = 0;
+    // 
+    char* data = new char[1024];
+    // Tamaño maximo que recibimos
+    std::size_t size = 1024;
+    // Receive se rellena solo
+    std::size_t received;
 
     Status s = GetStatus(tcpSocket->receive(data, size, received));
     _ims->Read(data, size);
