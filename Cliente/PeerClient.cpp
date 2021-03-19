@@ -1,5 +1,64 @@
 #include "PeerClient.h"
 
+void PeerClient::Recepcion()
+{
+
+	Status status;
+
+	while (loop) {
+		// Make the selector wait for data on any socket
+		if (selector.Wait())
+		{
+			for (size_t i = 0; i < clientes.size(); i++)
+			{
+				if (selector.IsReady(clientes[i]))
+				{
+					// The client has sent some data, we can receive it
+					sf::Packet packet;
+					status = clientes[i]->Receive(packet);
+					if (status == Status::Done)
+					{
+						std::string protocol;
+						packet >> protocol;
+						if (protocol == "S_OK") {
+							// Confirm Server Connection
+
+						}
+						else if (protocol == "SEND_PLAYERS_IP_PORT") {
+
+
+						}
+						else if (protocol == "GET_MESSAGE") {
+							// Function Get a message
+
+						}
+						else if (protocol == "VALOR_DADOS") {
+
+						}
+
+						else {
+							std::cout << "He recibido un paquete pero no se como descifrarlo\n";
+						}
+
+
+					}
+					else if (status == Status::Disconnected)
+					{
+						selector.Remove(clientes[i]);
+						loop = false;
+						std::cout << "Elimino el socket que se ha desconectado\n";
+					}
+					else
+					{
+						loop = false;
+						std::cout << "Error al recibir de " << clientes[i]->GetRemotePort().port << std::endl;
+					}
+				}
+			}
+		}
+	}
+}
+
 void PeerClient::RecepcionClient(TcpSocket* sock)
 {
 	Status status;
@@ -53,7 +112,7 @@ void PeerClient::RecepcionMessages()
 {
 	bool running = true;
 	Status status;
-	Selector selector;
+	
 	for (size_t i = 0; i < clientes.size(); i++)
 	{
 		selector.Add(clientes[i]);
