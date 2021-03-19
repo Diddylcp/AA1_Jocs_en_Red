@@ -24,8 +24,8 @@ bool Servidor() {
 	}
 	else {
 		//TODO: limpiar esto
-		IpAddress ip = sf::IpAddress::LocalHost.toString();
-		std::cout << ip.ip << ":" << std::to_string(50000) << std::endl;
+		sf::IpAddress ip = sf::IpAddress::LocalHost;
+		std::cout << ip.getLocalAddress() << ":" << std::to_string(50000) << std::endl;
 
 		while (running) {
 			TcpSocket* newClient = new TcpSocket;
@@ -40,9 +40,12 @@ bool Servidor() {
 				for (size_t i = 0; i < clientes.size(); i++)
 				{
 					sf::Packet pack;
-					pack << clientesData[i];
+					pack << *clientesData[i];
 
 					status = newClient->Send(pack);
+
+					ClientData dataAux;
+					pack >> dataAux;
 
 					if (status == Status::Disconnected)
 					{
