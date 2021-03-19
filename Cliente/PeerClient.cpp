@@ -10,7 +10,7 @@ void PeerClient::RecepcionClient(TcpSocket* sock)
 		status = sock->Receive(pack);
 
 		if (status == Status::Done) {
-			DataCliente aux;
+			ClientData aux;
 			pack >> aux;
 			std::cout << aux.ipAddress.ip << ":" << aux.port << std::endl;
 			if (aux.ipAddress.ip == sf::IpAddress::LocalHost) {

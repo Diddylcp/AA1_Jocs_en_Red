@@ -154,7 +154,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClientData.cpp" />
+    <ClCompile Include="Room.cpp" />
+    <ClCompile Include="Selector.cpp" />
     <ClCompile Include="servidor.cpp" />
+    <ClCompile Include="TcpListener.cpp" />
+    <ClCompile Include="TcpSocket.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ClientData.h" />
+    <ClInclude Include="InputMemoryStream.h" />
+    <ClInclude Include="OutputMemoryStream.h" />
+    <ClInclude Include="Room.h" />
+    <ClInclude Include="Selector.h" />
+    <ClInclude Include="TcpListener.h" />
+    <ClInclude Include="TcpSocket.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

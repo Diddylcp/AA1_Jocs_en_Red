@@ -4,66 +4,34 @@
 #include <vector>
 #include <mutex>
 #include <chrono>
-#include <SFML/Network.hpp>
-
-struct DataCliente {
-
-	
-	DataCliente() {	}
-	DataCliente(sf::IpAddress _ip, unsigned short _port) {
-		ip = _ip;
-		port = _port;
-	}
-	sf::IpAddress ip;
-	unsigned short port;
-
-	
-};
-
-#pragma region Sobrecargado de Operadores
-
-sf::Packet& operator>>(sf::Packet& packet, DataCliente cliente)
-{
-	std::string ipStr;
-	packet >> ipStr;
-	cliente.ip = sf::IpAddress(ipStr);
-	return packet >> cliente.port;
-}
-
-sf::Packet& operator<<(sf::Packet& packet, DataCliente cliente)
-{
-	packet << cliente.ip.toString();
-	packet << cliente.port;
-	return packet;
-}
-
-#pragma endregion
-
+#include "Selector.h"
+#include "ClientData.h"
 
 
 bool Servidor() {
 	bool running = true;
-	sf::Socket::Status status;
-	sf::TcpListener listener;
-	std::vector<sf::TcpSocket*> clientes;
-	std::vector<DataCliente> clientesData;
+	Status status;
+	TcpListener listener;
+	std::vector<TcpSocket*> clientes;
+	std::vector<ClientData*> clientesData;
 
 	//Accept para esperar socket nuevo
-	status = listener.listen(50000);
+	status = listener.Listen(50000);
 
-	if (status != sf::Socket::Done) {
+	if (status != Status::Done) {
 		std::cout << "Error en el listener....cerrando el programa";
 		return false;
 	}
 	else {
-		sf::IpAddress ip = sf::IpAddress::LocalHost;
-		std::cout << ip.getLocalAddress() << ":" << std::to_string(50000) << std::endl;
+		//TODO: limpiar esto
+		IpAddress ip = sf::IpAddress::LocalHost.toString();
+		std::cout << ip.ip << ":" << std::to_string(50000) << std::endl;
 
 		while (running) {
-			sf::TcpSocket* newClient = new sf::TcpSocket;
-			status = listener.accept(*newClient);
+			TcpSocket* newClient = new TcpSocket;
+			status = listener.Accept(newClient);
 
-			if (status != sf::Socket::Done) {
+			if (status != Status::Done) {
 				std::cout << "Error en el listener....cerrando el programa";
 				return false;
 			}
@@ -74,36 +42,36 @@ bool Servidor() {
 					sf::Packet pack;
 					pack << clientesData[i];
 
-					status = newClient->send(pack);
+					status = newClient->Send(pack);
 
-					if (status == sf::Socket::Status::Disconnected)
+					if (status == Status::Disconnected)
 					{
 						break;
 					}
 				}
 				sf::Packet packet;
-				DataCliente aux;
-				aux.ip = sf::IpAddress::LocalHost;
-				aux.port = newClient->getRemotePort();
+				ClientData aux;
+				aux.ipAddress = sf::IpAddress::LocalHost.toString();
+				aux.port = newClient->GetRemotePort().port;
 				packet << aux;
 
-				status = newClient->send(packet);
+				status = newClient->Send(packet);
 				clientes.push_back(newClient);
-				clientesData.push_back(DataCliente(newClient->getRemoteAddress(), newClient->getRemotePort()));
-				std::cout << newClient->getRemoteAddress() << ":" << newClient->getRemotePort() << "  " << aux.ip.toString();
-				newClient->disconnect();
+				clientesData.push_back(new ClientData(newClient->GetRemoteIP(), newClient->GetRemotePort().port));
+				std::cout << newClient->GetRemoteIP() << ":" << newClient->GetRemotePort().port << "  " << aux.ipAddress.ip;
+				newClient->Disconnect();
 
 			}
 			
 			if (clientes.size() == 4) {
 				std::cout << "Se han conectado 4 personas\n";
 				running = false;
-				listener.close();
+				listener.Disconnect();
 			}
 		}
 		for (size_t i = 0; i < clientes.size(); i++)
 		{
-			clientes[i]->disconnect();
+			clientes[i]->Disconnect();
 			delete clientes[i];
 		}
 		clientes.clear();

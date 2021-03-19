@@ -6,6 +6,7 @@
 #include <mutex>
 #include <chrono>
 #include "Selector.h"
+#include "ClientData.h"
 
 class PeerClient
 {

@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClientData.cpp" />
     <ClCompile Include="cliente.cpp" />
     <ClCompile Include="PeerClient.cpp" />
     <ClCompile Include="Selector.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="TcpSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientData.h" />
     <ClInclude Include="InputMemoryStream.h" />
     <ClInclude Include="OutputMemoryStream.h" />
     <ClInclude Include="PeerClient.h" />
