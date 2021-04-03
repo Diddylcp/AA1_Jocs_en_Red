@@ -1,30 +1,30 @@
 #include <string>
 #pragma once
 
+enum class Cultura
+{
+	ARABE,
+	BANTU,
+	CHINA,
+	ESQUIMAL,
+	INDIA,
+	MEXICANA,
+	TIROLESA,
+	COUNT
+};
+
+enum class Familiar
+{
+	ABUELO,
+	ABUELA,
+	PADRE,
+	MADRE,
+	HIJO,
+	HIJA,
+	COUNT
+};
+
 struct Carta {
-
-	enum class Cultura
-	{
-		ARABE,
-		BANTU,
-		CHINA,
-		ESQUIMAL,
-		INDIA,
-		MEXICANA,
-		TIROLESA,
-		COUNT
-	};
-
-	enum class Familiar
-	{
-		ABUELO,
-		ABUELA,
-		PADRE,
-		MADRE,
-		HIJO,
-		HIJA,
-		COUNT
-	};
 
 	Cultura culture;
 	Familiar parent;
@@ -96,4 +96,20 @@ struct Carta {
 
 		return fString;
 	}
+
+	bool operator== (Carta c) {
+		if (c.culture == culture && c.parent == parent) return true;
+		else return false;
+	}
 };
+
+
+void PedirCarta(Cultura c, Familiar f, int p)
+{
+	// Pide la carta que tiene la cultura c y el familiar f al jugador p
+}
+
+bool CompararCartas(Carta c1, Carta c2)
+{
+	return c1 == c2;
+}

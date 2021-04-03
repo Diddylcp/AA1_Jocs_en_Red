@@ -59,5 +59,8 @@
     <ClInclude Include="ClientData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameElements.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
