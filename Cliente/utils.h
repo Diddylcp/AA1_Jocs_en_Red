@@ -39,6 +39,9 @@ enum class Message_Protocol
 {
 	PEER_CLIENTS,
 	PEER_LOGIN,
+	PEDIR_CARTA,
+	NEXT_TURN,
+	RESPONSE_PEDIR_CARTA
 
 };
 

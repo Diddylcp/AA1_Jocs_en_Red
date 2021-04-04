@@ -1,4 +1,5 @@
 #include <string>
+#include "utils.h"
 #pragma once
 
 enum class Cultura
@@ -104,7 +105,12 @@ struct Carta {
 };
 
 
-void PedirCarta(Cultura c, Familiar f, int p)
+void SendRequestCard(Cultura c, Familiar f, int p)
 {
 	// Pide la carta que tiene la cultura c y el familiar f al jugador p
+	sf::Packet pack;
+	pack << static_cast<int>(Message_Protocol::PEDIR_CARTA);
+	pack << p;
+	pack << static_cast<int>(c);
+	pack << static_cast<int>(f);
 }
