@@ -43,25 +43,25 @@ struct Carta {
 
 		switch (culture)
 		{
-		case Carta::Cultura::ARABE:
+		case Cultura::ARABE:
 			cString = "Árabe";
 			break;
-		case Carta::Cultura::BANTU:
+		case Cultura::BANTU:
 			cString = "Bantú";
 			break;
-		case Carta::Cultura::CHINA:
+		case Cultura::CHINA:
 			cString = "China";
 			break;
-		case Carta::Cultura::ESQUIMAL:
+		case Cultura::ESQUIMAL:
 			cString = "Esquimal";
 			break;
-		case Carta::Cultura::INDIA:
+		case Cultura::INDIA:
 			cString = "India";
 			break;
-		case Carta::Cultura::MEXICANA:
+		case Cultura::MEXICANA:
 			cString = "Mexicana";
 			break;
-		case Carta::Cultura::TIROLESA:
+		case Cultura::TIROLESA:
 			cString = "Tirolesa";
 			break;
 		default:
@@ -70,22 +70,22 @@ struct Carta {
 
 		switch (parent)
 		{
-		case Carta::Familiar::ABUELO:
+		case Familiar::ABUELO:
 			pString = "Abuelo";
 			break;
-		case Carta::Familiar::ABUELA:
+		case Familiar::ABUELA:
 			pString = "Abuela";
 			break;
-		case Carta::Familiar::PADRE:
+		case Familiar::PADRE:
 			pString = "Padre";
 			break;
-		case Carta::Familiar::MADRE:
+		case Familiar::MADRE:
 			pString = "Madre";
 			break;
-		case Carta::Familiar::HIJO:
+		case Familiar::HIJO:
 			pString = "Hijo";
 			break;
-		case Carta::Familiar::HIJA:
+		case Familiar::HIJA:
 			pString = "Hija";
 			break;
 		default:
@@ -107,9 +107,4 @@ struct Carta {
 void PedirCarta(Cultura c, Familiar f, int p)
 {
 	// Pide la carta que tiene la cultura c y el familiar f al jugador p
-}
-
-bool CompararCartas(Carta c1, Carta c2)
-{
-	return c1 == c2;
 }
