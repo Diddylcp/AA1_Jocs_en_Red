@@ -2,11 +2,18 @@
 
 Room::Room()
 {
+
 }
 
-Room::Room(std::string _password)
+Room::Room(int _roomSize, std::string _password)
 {
+	maxUsers = _roomSize;
 	password = _password;
+	
+	if (password.empty() || password[0] != ' ')
+	{
+		hasPassword = false;
+	}
 }
 
 Room::~Room()

@@ -17,7 +17,7 @@ TcpSocket::~TcpSocket()
 
 Status TcpSocket::Connect(std::string _ip, Port _port)
 {
-    sf::Socket::Status sockStatus = tcpSocket->connect(_ip, _port.port);
+    sf::Socket::Status sockStatus = tcpSocket->connect(_ip, _port);
     return GetStatus(sockStatus);
 }
 

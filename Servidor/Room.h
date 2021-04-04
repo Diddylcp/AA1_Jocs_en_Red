@@ -11,11 +11,13 @@ class Room
 	unsigned short maxUsers;
 	float creationTime;
 
-	std::list<ClientData*> clientes;
 
 public:
+
+	std::list<ClientData*> clients;
 	Room();
-	Room(std::string _password);
+	Room(int _roomSize, std::string _password);
+	//Room(std::string _password);
 	~Room();
 
 	bool HasPassword();

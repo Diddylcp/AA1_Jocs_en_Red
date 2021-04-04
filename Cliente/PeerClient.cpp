@@ -74,7 +74,7 @@ void PeerClient::RecepcionMessages()
 					{
 						std::string strRec;
 						packet >> strRec;
-						std::cout << "He recibido " << strRec << " del puerto " << clientes[i]->GetRemotePort().port << std::endl;
+						std::cout << "He recibido " << strRec << " del puerto " << clientes[i]->GetRemotePort()<< std::endl;
 					}
 					else if (status == Status::Disconnected)
 					{
@@ -85,7 +85,7 @@ void PeerClient::RecepcionMessages()
 					else
 					{
 						loop = false;
-						std::cout << "Error al recibir de " << clientes[i]->GetRemotePort().port << std::endl;
+						std::cout << "Error al recibir de " << clientes[i]->GetRemotePort()<< std::endl;
 					}
 				}
 			}

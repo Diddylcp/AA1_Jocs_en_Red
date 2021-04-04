@@ -7,7 +7,7 @@ class ClientData
 public:
 	IpAddress ipAddress;
 	unsigned short port;
-	sf::TcpSocket* socket;
+	TcpSocket* socket;
 
 	ClientData();
 	ClientData(IpAddress _ip, unsigned short _port);

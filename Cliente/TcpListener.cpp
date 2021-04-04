@@ -17,7 +17,7 @@ sf::TcpListener* TcpListener::GetListener()
 
 Status TcpListener::Listen(Port _port)
 {
-	return Status(listener->listen(_port.port));
+	return Status(listener->listen(_port));
 }
 
 Status TcpListener::Accept(TcpSocket* _socket)
