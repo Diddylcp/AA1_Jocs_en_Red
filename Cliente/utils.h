@@ -2,7 +2,13 @@
 #include <SFML/Network.hpp>
 #include <string>
 
+
+#define SEPARATOR_MESSAGE_PROTOCOL "_"
+#define SEPARATOR_MESSAGE_THINGS ":"
 #define JOIN_OR_CREATE "Do you want to join an existing game or create a new one? (0 join, 1 create)"
+#define INTRODUCE_IP "Introduce la ip....."
+#define ERROR_LISTENER "Error en el listener....cerrando el programa"
+#define CONNECTED_CLIENTS(x) "Tenemos %d clientes conectados", x
 
 
 
@@ -37,23 +43,24 @@ enum class Message_Protocol
     C_JOIN_OR_CREATE,
     GAMES_INFO,
     GET_GAMES_INFO,
+    S_ROOM_INFO,
     SEND_PLAYERS_IP_PORT,
     GAMES_FILTRE_SEND,
     JOIN_GAME,
 
 };
 
-std::string GetMessageProtocolFrom(Message_Protocol index) 
+static std::string GetMessageProtocolFrom(Message_Protocol index) 
 {
     std::string str;
 
-    int i = static_cast<int>(index);
-    str = std::to_string(i) + "_";
+    int identifier = static_cast<int>(index);
+    str = std::to_string(identifier) + "_";
     
     return str;
 }
 
-Message_Protocol GetMessageProtocol(std::string index) 
+static Message_Protocol GetMessageProtocol(std::string index) 
 {
     return static_cast<Message_Protocol>(std::stoi(index));
 }

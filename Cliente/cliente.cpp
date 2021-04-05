@@ -7,110 +7,32 @@
 #include "PeerClient.h"
 
 struct RoomsInfo {
+	int idRoom;
 	int maxClients;
 	int countClients;
 	bool hasPassword;
+
+	RoomsInfo();
+	RoomsInfo(std::string _idRoom, std::string _maxClients, std::string _countClients, std::string _hasPassword) {
+		idRoom = std::stoi(_idRoom);
+		maxClients = std::stoi(_maxClients);
+		countClients = std::stoi(_countClients);
+		hasPassword = (_hasPassword == "0"? true : false);
+	}
+
+	std::string to_string() {
+		std::string s = std::to_string(idRoom) +" | ("+ std::to_string(countClients) + " of " + std::to_string(maxClients) + ") " + (hasPassword ? "CLOSED" : "OPEN");
+		return s;
+	}
 };
 
-bool Cliente(TcpSocket* _socket, std::string _ip, unsigned short _puerto) {
-
-	//Connect a una ip: puerto
-	Status status;
-	status = _socket->Connect(_ip, _puerto);
-
-	if (status != Status::Done) 
-	{
-		std::cout << "Error en el connect....cerrando el programa";
-		return false;
-	}
-	else 
-	{
-
-		return true;
-	}
-
-}
-
-void JoinCreateRecived(TcpSocket* socket) {
-	std::cout << JOIN_OR_CREATE;
-	int option;
-	do
-	{
-		std::cin >> option;
-	} while (option != 0 && option != 1);
-
-	if (option == 0) {
-		JoinGame(socket);
-	}
-	else {
-		CreateGame(socket);
-	}
-}
-void CreateGame(TcpSocket *socket)
+bool Cliente(TcpSocket* _socket, std::string _ip, unsigned short _puerto)
 {
-	std::cout << "How many players? (3-6)";
-	int roomSize;
-	std::cin >> roomSize;
-	
-	if (roomSize < 3)roomSize = 3;
-	else if (roomSize > 6) roomSize = 6;
-
-	std::cout << "Write your password? ";
-	sf::Packet p;
-	socket->Send(p);
-
-
+	return _socket->Connect(_ip, _puerto) == Status::Done;
 }
 
-void JoinGame(TcpSocket* socket) 
+void SendingMessages(PeerClient* myClients) 
 {
-	
-}
-
-
-
-
-void Recieve(TcpSocket *socket) {
-	sf::Packet p;
-	socket->Receive(p);
-
-	std::string s;
-	p >> s;
-
-
-	Message_Protocol mp = GetMessageProtocol(s.substr(0, s.find("_")));
-	switch (mp)
-	{
-		case Message_Protocol::S_JOIN_OR_CREATE:
-			JoinCreateRecived(socket);
-			break;
-		case Message_Protocol::C_JOIN_OR_CREATE:
-
-			break;
-		case Message_Protocol::GAMES_INFO:
-			
-			break;
-		case Message_Protocol::GET_GAMES_INFO:
-			
-			break;
-		case Message_Protocol::SEND_PLAYERS_IP_PORT:
-			
-			break;
-		case Message_Protocol::GAMES_FILTRE_SEND:
-			
-			break;
-		case Message_Protocol::CREATE_GAME:
-			
-			break;
-		case Message_Protocol::JOIN_GAME:
-			
-			break;
-		default:
-			break;
-	}
-}
-
-void SendingMessages(PeerClient* myClients) {
 	myClients->SendMessages();
 }
 
@@ -119,7 +41,7 @@ int main() {
 
 	TcpSocket* sock = new TcpSocket();
 	//Pedimos ip:port y pasar por parametro
-	std::cout << "Introduce la ip....." << std::endl;
+	std::cout << INTRODUCE_IP << std::endl;
 	std::string ip;
 	std::cin >> ip;
 
@@ -128,15 +50,23 @@ int main() {
 	PeerClient myClients;
 
 	okConexion = Cliente(sock, ip, puerto);
+
+
+	
 	if (okConexion) {
 		// TODO: recibir join or create
-		Recieve(sock);
+		myClients.Recieve(sock);
 
 		myClients.RecepcionClient(sock);
 		std::thread tSend(SendingMessages, &myClients);
 		tSend.detach();
 		myClients.RecepcionMessages();
 	}
+	else
+	{
+		std::cout << "Error en el connect....cerrando el programa";
+	}
+
 	for (size_t i = 0; i < myClients.clientes.size(); i++)
 	{
 		myClients.clientes[i]->Disconnect();

@@ -5,12 +5,13 @@ Room::Room()
 
 }
 
-Room::Room(int _roomSize, std::string _password)
+Room::Room(int _id, int _roomSize, std::string _password)
 {
+	id = _id;
 	maxUsers = _roomSize;
 	password = _password;
 	
-	if (password.empty() || password[0] != ' ')
+	if (password.empty() || password == " ")
 	{
 		hasPassword = false;
 	}
@@ -18,8 +19,13 @@ Room::Room(int _roomSize, std::string _password)
 
 Room::~Room()
 {
-	clientes.clear();
+	clients.clear();
 	delete this;
+}
+
+unsigned short Room::GetMaxUsers()
+{
+	return maxUsers;
 }
 
 bool Room::HasPassword()
@@ -34,12 +40,12 @@ bool Room::IsPasswordOk(std::string _password)
 
 void Room::AddUserToRoom(ClientData* _clientData)
 {
-	clientes.push_back(_clientData);
+	clients.push_back(_clientData);
 }
 
 void Room::DisconnectUserFromRoom(ClientData* _clientData)
 {
-	clientes.remove(_clientData);
+	clients.remove(_clientData);
 }
 
 void Room::StartGame()
@@ -49,4 +55,11 @@ void Room::StartGame()
 	//
 	// eviar mensaje de "ecuchar connect de otros clientes"
 	// al finalizar limpiar / eliminar sala
+}
+
+std::string Room::toString() 
+{
+	std::string roomInfo = std::to_string(id) + SEPARATOR_MESSAGE_PROTOCOL 
+		+ std::to_string(clients.size()) + " of " + std::to_string(maxUsers);
+	return roomInfo;
 }

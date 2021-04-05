@@ -16,14 +16,19 @@ public:
 
 	std::list<ClientData*> clients;
 	Room();
-	Room(int _roomSize, std::string _password);
+	Room(int _id,  int _roomSize, std::string _password);
 	//Room(std::string _password);
 	~Room();
+
+	
+	unsigned short GetMaxUsers();
 
 	bool HasPassword();
 	bool IsPasswordOk(std::string _password);
 	void AddUserToRoom(ClientData* _clientData);
 	void DisconnectUserFromRoom(ClientData* _clientData);
 	void StartGame();
+
+	std::string toString();
 };
 

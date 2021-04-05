@@ -10,6 +10,7 @@ public:
 	TcpSocket* socket;
 
 	ClientData();
+	ClientData(TcpSocket* _socket);
 	ClientData(IpAddress _ip, unsigned short _port);
 	ClientData(std::string _ip, unsigned short _port);
 	

@@ -10,8 +10,13 @@ public:
 	TcpSocket* socket;
 
 	ClientData();
+	ClientData(TcpSocket * _socket);
 	ClientData(IpAddress _ip, unsigned short _port);
 	ClientData(std::string _ip, unsigned short _port);
+
+	std::string toString() {
+		return ipAddress.ip.toString() + SEPARATOR_MESSAGE_PROTOCOL + std::to_string(port);
+	}
 	
 	friend sf::Packet& operator>>(sf::Packet& packet, ClientData& cliente)
 	{
