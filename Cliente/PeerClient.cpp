@@ -1,5 +1,7 @@
 #include "PeerClient.h"
 
+
+
 void PeerClient::RecepcionClient(TcpSocket* sock)
 {
 	Status status;
@@ -132,7 +134,8 @@ void PeerClient::Recieve(TcpSocket* socket) {
 		std::string s;
 		p >> s;
 		std::vector<std::string> parameters = split(s,'_');
-		std::cout << "Message recived: " << s << std::endl;
+		
+		std::cout << "Message received: " << s << std::endl;
 
 		Message_Protocol mp = GetMessageProtocol(parameters[0]);
 		switch (mp)
@@ -167,27 +170,47 @@ void PeerClient::Recieve(TcpSocket* socket) {
 
 void PeerClient::ShowGamesInfo(TcpSocket* socket, std::vector<std::string> message)
 {
-	/*
 	int number = std::stoi(message[1]);
-	RoomsInfo* rooms;
-	rooms = new RoomsInfo[number];
+
+	std::string roomsInfoString;
+	std::vector<bool> hasPassword;
 
 	for (int i = 0; i < number; i++)
 	{
 		for (int j = 2; j < 4; j += 4)
 		{
-			rooms[i] = PeerClient::RoomsInfo(
-				message[ (j),     message.find(SEPARATOR_MESSAGE_PROTOCOL) ),
-				message[ (j + 1), message.find(SEPARATOR_MESSAGE_PROTOCOL) ),
-				message[ (j + 2), message.find(SEPARATOR_MESSAGE_PROTOCOL) ),
-				message[ (j + 3), message.find(SEPARATOR_MESSAGE_PROTOCOL)));
+			roomsInfoString += message[j] + " | "
+				+ message[j + 1] + " of " + message[j + 2]
+				+ " | " + message[j + 3] + "\n";
+			// guardamos si tiene contraseña para pedirla si es necesario
+			hasPassword.push_back((message[j + 3] == "0") ? true : false);
 		}
-		rooms[i].toString();
+		std::cout << roomsInfoString;
 	}
 
+	int room;
+	std::cout << SELECT_ROOM << "\n";
+	std::cin >> room;
 
-	Recieve(socket);
-	*/
+	std::string out = GetMessageProtocolFrom(Message_Protocol::C_JOIN_OR_CREATE);
+	out += "0_" + std::to_string(room);
+
+	if (hasPassword[room]) {
+		std::cout << "Insert password: ";
+		std::string pass;
+		std::cin >> pass;
+		out += SEPARATOR_MESSAGE_PROTOCOL + pass;
+	}
+	else
+	{
+		out += SEPARATOR_MESSAGE_PROTOCOL;
+		out += " ";
+	}
+
+	sf::Packet pack;
+	pack << out;
+
+	socket->Send(pack);
 }
 
 void PeerClient::CreateGame(TcpSocket* socket)
@@ -226,7 +249,7 @@ void PeerClient::CreateGame(TcpSocket* socket)
 
 void PeerClient::JoinGame(TcpSocket* socket)
 {
-
+	
 }
 
 void PeerClient::JoinCreateRecived(TcpSocket* socket) {
@@ -238,7 +261,10 @@ void PeerClient::JoinCreateRecived(TcpSocket* socket) {
 	} while (option != 0 && option != 1);
 
 	if (option == 0) {
-		JoinGame(socket);
+		std::string message = GetMessageProtocolFrom(Message_Protocol::GET_GAMES_INFO);
+		sf::Packet p;
+		p << message;
+		socket->Send(p);
 		Recieve(socket);
 	}
 	else {

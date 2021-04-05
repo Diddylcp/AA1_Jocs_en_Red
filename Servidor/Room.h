@@ -20,7 +20,7 @@ public:
 	//Room(std::string _password);
 	~Room();
 
-	
+	unsigned short GetId();
 	unsigned short GetMaxUsers();
 
 	bool HasPassword();

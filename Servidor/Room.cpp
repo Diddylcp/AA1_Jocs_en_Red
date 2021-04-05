@@ -23,6 +23,10 @@ Room::~Room()
 	delete this;
 }
 
+unsigned short Room::GetId() {
+	return id;
+}
+
 unsigned short Room::GetMaxUsers()
 {
 	return maxUsers;

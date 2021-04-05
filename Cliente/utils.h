@@ -6,10 +6,10 @@
 #include <algorithm>
 #include <iterator>
 
-
 #define SEPARATOR_MESSAGE_PROTOCOL "_"
 #define SEPARATOR_MESSAGE_THINGS ":"
 #define JOIN_OR_CREATE "Do you want to join an existing game or create a new one? (0 join, 1 create)"
+#define SELECT_ROOM "Wich room do you want to join? (numbers)"
 #define INTRODUCE_IP "Introduce la ip....."
 #define ERROR_LISTENER "Error en el listener....cerrando el programa"
 #define CONNECTED_CLIENTS(x) "Tenemos %d clientes conectados", x
@@ -106,3 +106,23 @@ static Status GetStatus(sf::Socket::Status _status)
     }
     return status;
 }
+/*
+struct RoomsInfo {
+    int idRoom;
+    int maxClients;
+    int countClients;
+    bool hasPassword;
+
+    RoomsInfo();
+    RoomsInfo(std::string _idRoom, std::string _maxClients, std::string _countClients, std::string _hasPassword) {
+        idRoom = std::stoi(_idRoom);
+        maxClients = std::stoi(_maxClients);
+        countClients = std::stoi(_countClients);
+        hasPassword = (_hasPassword == "0" ? true : false);
+    }
+
+    std::string toString() {
+        std::string s = std::to_string(idRoom) + " | (" + std::to_string(countClients) + " of " + std::to_string(maxClients) + ") " + (hasPassword ? "CLOSED" : "OPEN");
+        return s;
+    }
+};*/
