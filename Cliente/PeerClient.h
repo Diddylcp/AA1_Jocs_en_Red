@@ -39,6 +39,7 @@ public:
 	Port port = 0;
 	bool loop = true;
 	TcpListener listener;
+	Game myGame;
 
 	PeerClient() {};
 

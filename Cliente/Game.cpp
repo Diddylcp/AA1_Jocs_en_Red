@@ -1,5 +1,11 @@
 #include "Game.h"
 
+Game::Game()
+{
+	points = 0;
+	currTurn = 0;
+}
+
 void Game::RequestCard()
 {
 	
@@ -95,4 +101,57 @@ void Game::CheckCard(std::vector<std::string> parameters)
 			clientes[i]->Send(pack);
 		}
 	}
+}
+
+void Game::initDeck()
+{
+	for (int i = 0; i < (int)Cultura::COUNT; i++)
+	{
+		for (int j = 0; j < (int)Familiar::COUNT; j++)
+		{
+			Carta aux((Cultura)i, (Familiar)j);
+			baraja.push_back(aux);
+		}
+	}
+	if(baraja.size() != ((int)Cultura::COUNT*(int)Familiar::COUNT)) 
+		std::cout << "Unexpected number of cards" << std::endl; 
+
+	shuffleDeck();
+}
+
+void Game::shuffleDeck()
+{
+	std::srand(seed);
+	std::random_shuffle(baraja.begin(), baraja.end(), myRandom);
+}
+
+void Game::dealCards()
+{
+	for (int i = 0; i < baraja.size(); i++)
+	{
+		if (i % numPlayers == turnPos)
+		{
+			cartas.push_back(baraja[i]);
+		}
+	}
+}
+
+void Game::SetSeed(int _seed)
+{
+	seed = _seed;
+}
+
+int Game::GetSeed()
+{
+	return seed;
+}
+
+void Game::SetTurnPos(int _turnPos)
+{
+	turnPos = _turnPos;
+}
+
+int Game::GetTurnPos()
+{
+	return turnPos;
 }

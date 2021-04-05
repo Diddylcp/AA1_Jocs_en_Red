@@ -110,3 +110,9 @@ static Status GetStatus(sf::Socket::Status _status)
     }
     return status;
 }
+
+
+int myRandom(int _seed)
+{
+    return std::rand() % _seed;
+}
