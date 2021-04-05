@@ -30,23 +30,16 @@ int main() {
 	PeerClient myClients;
 
 	okConexion = Cliente(sock, ip, puerto);
-	myClients.port = sock->GetLocalPort();
+
 	if (okConexion) {
 		// TODO: recibir join or create
 		while (myClients.loop) {
 			myClients.Recieve(sock);
 		}
-		myClients.loop = true;
-		while (myClients.loop) {
-			if (myClients.selector.Wait()) {
-				for (size_t i = 0; i < myClients.clientes.size(); i++)
-				{
-					if (myClients.selector.IsReady(myClients.clientes[i])){
-						myClients.Recieve(myClients.clientes[i]);
-					}
-				}
-			}
-		}
+		myClients.RecepcionClient(sock);
+		//std::thread tSend(SendingMessages, &myClients);
+		//tSend.detach();
+		//myClients.RecepcionMessages();
 	}
 	else
 	{

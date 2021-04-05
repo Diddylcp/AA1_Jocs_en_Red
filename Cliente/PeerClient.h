@@ -22,6 +22,8 @@ public:
 
 	PeerClient() {};
 
+	void RecepcionClient(TcpSocket* sock);
+	void RecepcionMessages();
 	void SendMessages();
 
 	void Recieve(TcpSocket* socket);
