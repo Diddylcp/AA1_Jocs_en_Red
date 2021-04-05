@@ -107,10 +107,20 @@ void PeerClient::Recieve(TcpSocket* socket) {
 		case Message_Protocol::GAMES_FILTRE_SEND:
 
 			break;
-		case Message_Protocol::JOIN_GAME:
-
+		case Message_Protocol::START_GAME:
+			myGame.initDeck();
+			break;
+		case Message_Protocol::NEXT_TURN:
+			myGame.NotifyTurn();
+			break;
+		case Message_Protocol::REQUEST_CARD:
+			myGame.NotifyCardRequest(parameters);
+			break;
+		case Message_Protocol::FAMILY_COMPLETE:
+			myGame.NotifyFamilyCompleted(parameters);
 			break;
 
+			break;
 		default:
 			break;
 		}
@@ -236,6 +246,13 @@ void PeerClient::JoinCreateRecived(TcpSocket* socket) {
 		CreateGame(socket);
 		//Recieve(socket);
 	}
+}
+
+void PeerClient::StartGame()
+{
+	// Repartir Cartas
+
+
 }
 
 

@@ -5,6 +5,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
+#include <iostream>
 
 #define SEPARATOR_MESSAGE_PROTOCOL "_"
 #define SEPARATOR_MESSAGE_THINGS ":"
@@ -50,8 +51,11 @@ enum class Message_Protocol
     S_ROOM_INFO,
     SEND_PLAYERS_IP_PORT,
     GAMES_FILTRE_SEND,
-    JOIN_GAME,
-
+    NEXT_TURN,
+    START_GAME,
+    REQUEST_CARD,
+    RESPONSE_REQUEST_CARD,
+    FAMILY_COMPLETE
 };
 
 static std::string GetMessageProtocolFrom(Message_Protocol index) 
@@ -106,23 +110,8 @@ static Status GetStatus(sf::Socket::Status _status)
     }
     return status;
 }
-/*
-struct RoomsInfo {
-    int idRoom;
-    int maxClients;
-    int countClients;
-    bool hasPassword;
 
-    RoomsInfo();
-    RoomsInfo(std::string _idRoom, std::string _maxClients, std::string _countClients, std::string _hasPassword) {
-        idRoom = std::stoi(_idRoom);
-        maxClients = std::stoi(_maxClients);
-        countClients = std::stoi(_countClients);
-        hasPassword = (_hasPassword == "0" ? true : false);
-    }
-
-    std::string toString() {
-        std::string s = std::to_string(idRoom) + " | (" + std::to_string(countClients) + " of " + std::to_string(maxClients) + ") " + (hasPassword ? "CLOSED" : "OPEN");
-        return s;
-    }
-};*/
+int myRandom(int _seed)
+{
+    return std::rand() % _seed;
+}

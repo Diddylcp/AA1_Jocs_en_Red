@@ -43,7 +43,6 @@ enum class Message_Protocol
 	S_ROOM_INFO,
 	SEND_PLAYERS_IP_PORT,
 	GAMES_FILTRE_SEND,
-	JOIN_GAME,
 
 };
 
@@ -99,3 +98,4 @@ static Status GetStatus(sf::Socket::Status _status)
     }
     return status;
 }
+
