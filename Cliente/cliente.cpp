@@ -33,12 +33,13 @@ int main() {
 
 	if (okConexion) {
 		// TODO: recibir join or create
-		myClients.Recieve(sock);
-
+		while (myClients.loop) {
+			myClients.Recieve(sock);
+		}
 		myClients.RecepcionClient(sock);
-		std::thread tSend(SendingMessages, &myClients);
-		tSend.detach();
-		myClients.RecepcionMessages();
+		//std::thread tSend(SendingMessages, &myClients);
+		//tSend.detach();
+		//myClients.RecepcionMessages();
 	}
 	else
 	{

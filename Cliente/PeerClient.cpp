@@ -265,10 +265,10 @@ void PeerClient::JoinCreateRecived(TcpSocket* socket) {
 		sf::Packet p;
 		p << message;
 		socket->Send(p);
-		Recieve(socket);
+
 	}
 	else {
 		CreateGame(socket);
-		Recieve(socket);
+		//Recieve(socket);
 	}
 }

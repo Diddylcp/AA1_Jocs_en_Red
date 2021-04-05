@@ -59,6 +59,12 @@ void Room::StartGame()
 	//
 	// eviar mensaje de "ecuchar connect de otros clientes"
 	// al finalizar limpiar / eliminar sala
+	for(int i = 0; i<clients.size();i++)
+	int currClient = 0;
+	for (auto it = clients.begin(); it != clients.end(); ++it) {
+		std::string message = 
+		//(*it)->socket->Send()
+	}
 }
 
 std::string Room::toString() 
