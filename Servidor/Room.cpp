@@ -11,7 +11,7 @@ Room::Room(int _id, int _roomSize, std::string _password)
 	maxUsers = _roomSize;
 	password = _password;
 	
-	if (password.empty() || password == " ")
+	if ( password.empty() || password == " ")
 	{
 		hasPassword = false;
 	}

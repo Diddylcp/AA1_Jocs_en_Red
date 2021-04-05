@@ -152,6 +152,9 @@ void PeerClient::Recieve(TcpSocket* socket) {
 		case Message_Protocol::GET_GAMES_INFO:
 
 			break;
+		case Message_Protocol::S_ROOM_INFO:
+			RoomInfo(socket, parameters);
+			break;
 		case Message_Protocol::SEND_PLAYERS_IP_PORT:
 
 			break;
@@ -174,17 +177,28 @@ void PeerClient::ShowGamesInfo(TcpSocket* socket, std::vector<std::string> messa
 
 	std::string roomsInfoString;
 	std::vector<bool> hasPassword;
-
-	for (int i = 0; i < number; i++)
+	//?
+	for (int i = 0; i < number-1; i++)
 	{
-		for (int j = 2; j < 4; j += 4)
-		{
-			roomsInfoString += message[j] + " | "
-				+ message[j + 1] + " of " + message[j + 2]
-				+ " | " + message[j + 3] + "\n";
-			// guardamos si tiene contraseña para pedirla si es necesario
-			hasPassword.push_back((message[j + 3] == "0") ? true : false);
+		int j = i * 4 + 2;
+
+		roomsInfoString += message[j] + " | "
+			+ message[j + 1] + " of " + message[j + 2] + " | ";
+
+		if (message[j + 3] == "0") {
+			hasPassword.push_back(true);
+			roomsInfoString += "CLOSSED\n";
+
 		}
+		else
+		{
+			roomsInfoString += "OPPEN\n";
+			hasPassword.push_back(false);
+
+		}
+		// guardamos si tiene contraseña para pedirla si es necesario
+		hasPassword.push_back((message[j + 3] == "0") ? true : false);
+
 		std::cout << roomsInfoString;
 	}
 
@@ -233,7 +247,7 @@ void PeerClient::CreateGame(TcpSocket* socket)
 	}
 	else
 	{
-		passwd = " ";
+		passwd = "";
 	}
 
 	std::string message =
@@ -247,9 +261,13 @@ void PeerClient::CreateGame(TcpSocket* socket)
 	socket->Send(p);
 }
 
-void PeerClient::JoinGame(TcpSocket* socket)
+void PeerClient::RoomInfo(TcpSocket* socket, std::vector<std::string> message)
 {
-	
+	for (int i = 0; i < message.size(); i++) 
+	{
+
+	}
+
 }
 
 void PeerClient::JoinCreateRecived(TcpSocket* socket) {

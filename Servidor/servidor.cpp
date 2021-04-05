@@ -111,13 +111,6 @@ public:
 				}
 			}
 		}
-
-		for (size_t i = 0; i < clientes.size(); i++)
-		{
-			clientes[i]->Disconnect();
-			delete clientes[i];
-		}
-		clientes.clear();
 		return true;
 
 	}
@@ -190,7 +183,14 @@ public:
 		else if (message[1] == "1") // create game room
 		{
 			int roomSize = std::stoi( message[2]);
-			std::string pass = message[3];
+			
+			std::string pass;
+			if (message.size() > 3) {
+				pass = message[3];
+			}
+			else {
+				pass = "";
+			}
 
 			ClientData* c = new ClientData(socket);
 			Room* newRoom = CreateRoom(roomSize, pass);
@@ -244,7 +244,7 @@ public:
 				message += SEPARATOR_MESSAGE_PROTOCOL + std::to_string(rooms[i]->GetId())
 					+ SEPARATOR_MESSAGE_PROTOCOL + std::to_string(rooms[i]->clients.size())
 					+ SEPARATOR_MESSAGE_PROTOCOL + std::to_string(rooms[i]->GetMaxUsers())
-					+ SEPARATOR_MESSAGE_PROTOCOL + (rooms[i]->HasPassword() ? "0": "1");
+					+ SEPARATOR_MESSAGE_PROTOCOL + (rooms[i]->HasPassword() ? "0" : "1");
 			}
 		}
 		cabecera += std::to_string(roomsNumber) + message;
