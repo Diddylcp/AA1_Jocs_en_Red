@@ -16,11 +16,10 @@ public:
 	Port port = 0;
 	bool loop = true;
 	TcpListener listener;
+	Selector selector;
 
 	PeerClient() {};
 
-	void RecepcionClient(TcpSocket* sock);
-	void RecepcionMessages();
 	void SendMessages();
 
 	void Recieve(TcpSocket* socket);
