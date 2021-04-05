@@ -60,6 +60,7 @@ void Game::NextTurn()
 			break;
 		}
 	}
+	currTurn++;
 }
 
 void Game::CheckTurn()
@@ -74,11 +75,20 @@ void Game::CheckTurn()
 bool Game::ReceiveCard(std::vector<std::string> parameters)
 {
 	if (parameters[1] == "yes") {
-		std::cout << "Has acertado la carta! Vuelve a elegir otra\n";
-		RequestCard();
+		std::cout << "Ha acertado la carta! Vuelve a elegir otra\n";
+		if (currTurn == turnPos)
+		{
+			Carta card(parameters[2], parameters[3]);
+			cartas.push_back(card);
+			FamilyComplete();
+			RequestCard();
+		}
 	}
 	else
+	{
+		NotifyHasCard(false);
 		NextTurn();
+	}
 }
 
 void Game::CheckCard(std::vector<std::string> parameters)
@@ -89,8 +99,11 @@ void Game::CheckCard(std::vector<std::string> parameters)
 		bool haveCard = false;
 		for (int i = 0; i < cartas.size(); i++) {
 			if (toString(cartas[i].culture) == parameters[3] && toString(cartas[i].parent) == parameters[4]) {
-				message = GetMessageProtocolFrom(Message_Protocol::RESPONSE_REQUEST_CARD) + "yes";
-				haveCard = true;
+				message = GetMessageProtocolFrom(Message_Protocol::RESPONSE_REQUEST_CARD) + "yes" + "_" + cartas[i].toString();
+				haveCard = true; // TODO: Quitar carta de la mano
+				auto it = std::find(cartas.begin(), cartas.end(), cartas[i]);
+				cartas.erase(it);
+				break;
 			}
 		}
 		if (!haveCard) {
@@ -117,6 +130,7 @@ void Game::initDeck()
 		std::cout << "Unexpected number of cards" << std::endl; 
 
 	shuffleDeck();
+	dealCards();
 }
 
 void Game::shuffleDeck()
@@ -134,6 +148,7 @@ void Game::dealCards()
 			cartas.push_back(baraja[i]);
 		}
 	}
+	FamilyComplete();
 }
 
 void Game::SetSeed(int _seed)
@@ -154,4 +169,167 @@ void Game::SetTurnPos(int _turnPos)
 int Game::GetTurnPos()
 {
 	return turnPos;
+}
+
+void Game::NotifyTurn()
+{
+	currTurn++;
+	std::cout << "Ha cambiado el turno, le toca al Jugador " + currTurn << std::endl;
+}
+
+void Game::NotifyCardRequest(std::vector<std::string> str)
+{
+	CheckCard(str);
+	Carta c(str[3], str[4]);
+	std::cout << "Jugador " + str[2] + "--->" + " Jugador " + std::to_string(currTurn) + " Carta: " + toString(c.culture) + " " + toString(c.parent) << std::endl;
+}
+
+void Game::NotifyHasCard(bool has)
+{
+	if (has) std::cout << "Ha conseguido la carta" << std::endl;
+	else std::cout << "No ha conseguido la carta" << std::endl;
+}
+
+void Game::NotifyFamilyCompleted(std::vector<std::string> str)
+{
+	std::cout << str[1] << std::endl;
+}
+
+void Game::FamilyComplete()
+{
+	short arabCounter = 0, bantuCounter = 0, chinaCounter = 0, inuitCounter = 0, indianCounter = 0, mexicanCounter = 0, tirolCounter = 0;
+	for (int i = 0; i < cartas.size(); i++)
+	{
+		switch (cartas[i].culture)
+		{
+		case Cultura::ARABE:
+			arabCounter++;
+			break;
+		case Cultura::BANTU:
+			bantuCounter++;
+			break;
+		case Cultura::CHINA:
+			chinaCounter++;
+			break;
+		case Cultura::ESQUIMAL:
+			inuitCounter++;
+			break;
+		case Cultura::INDIA:
+			indianCounter++;
+			break;
+		case Cultura::MEXICANA:
+			mexicanCounter++;
+			break;
+		case Cultura::TIROLESA:
+			tirolCounter++;
+			break;
+		default:
+			break;
+		}
+	}
+	if (arabCounter == 6)
+	{
+		for (int i = 0; i < arabCounter; i++)
+		{
+			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isArab);
+			cartas.erase(it);
+		}
+		points++;
+		sf::Packet pack;
+		std::string texto = GetMessageProtocolFrom(Message_Protocol::FAMILY_COMPLETE) + "ARAB COMPLETE BY " + std::to_string(currTurn);
+		pack << texto;
+		for (int i = 0; i < clientes.size(); i++) {
+			clientes[i]->Send(pack);
+		}
+	}
+	if (bantuCounter == 6)
+	{
+		for (int i = 0; i < bantuCounter; i++)
+		{
+			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isBantu);
+			cartas.erase(it);
+		}
+		points++;
+		sf::Packet pack;
+		std::string texto = GetMessageProtocolFrom(Message_Protocol::FAMILY_COMPLETE) + "BANTU COMPLETE BY " + std::to_string(currTurn);
+		pack << texto;
+		for (int i = 0; i < clientes.size(); i++) {
+			clientes[i]->Send(pack);
+		}
+	}
+	if (chinaCounter == 6)
+	{
+		for (int i = 0; i < chinaCounter; i++)
+		{
+			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isChinese);
+			cartas.erase(it);
+		}
+		points++;
+		sf::Packet pack;
+		std::string texto = GetMessageProtocolFrom(Message_Protocol::FAMILY_COMPLETE) + "CHINA COMPLETE BY " + std::to_string(currTurn);
+		pack << texto;
+		for (int i = 0; i < clientes.size(); i++) {
+			clientes[i]->Send(pack);
+		}
+	}
+	if (inuitCounter == 6)
+	{
+		for (int i = 0; i < inuitCounter; i++)
+		{
+			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isEsquimal);
+			cartas.erase(it);
+		}
+		points++;
+		sf::Packet pack;
+		std::string texto = GetMessageProtocolFrom(Message_Protocol::FAMILY_COMPLETE) + "ESQUIMAL COMPLETE BY " + std::to_string(currTurn);
+		pack << texto;
+		for (int i = 0; i < clientes.size(); i++) {
+			clientes[i]->Send(pack);
+		}
+	}
+	if (indianCounter == 6)
+	{
+		for (int i = 0; i < indianCounter; i++)
+		{
+			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isIndian);
+			cartas.erase(it);
+		}
+		points++;
+		sf::Packet pack;
+		std::string texto = GetMessageProtocolFrom(Message_Protocol::FAMILY_COMPLETE) + "INDIAN COMPLETE BY " + std::to_string(currTurn);
+		pack << texto;
+		for (int i = 0; i < clientes.size(); i++) {
+			clientes[i]->Send(pack);
+		}
+	}
+	if (mexicanCounter == 6)
+	{
+		for (int i = 0; i < mexicanCounter; i++)
+		{
+			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isMexican);
+			cartas.erase(it);
+		}
+		points++;
+		sf::Packet pack;
+		std::string texto = GetMessageProtocolFrom(Message_Protocol::FAMILY_COMPLETE) + "MEXICAN COMPLETE BY " + std::to_string(currTurn);
+		pack << texto;
+		for (int i = 0; i < clientes.size(); i++) {
+			clientes[i]->Send(pack);
+		}
+	}
+	if (tirolCounter == 6)
+	{
+		for (int i = 0; i < tirolCounter; i++)
+		{
+			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isTirol);
+			cartas.erase(it);
+		}
+		points++;
+		sf::Packet pack;
+		std::string texto = GetMessageProtocolFrom(Message_Protocol::FAMILY_COMPLETE) + "TIROL COMPLETE BY " + std::to_string(currTurn) ;
+		pack << texto;
+		for (int i = 0; i < clientes.size(); i++) {
+			clientes[i]->Send(pack);
+		}
+	}
 }

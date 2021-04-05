@@ -92,66 +92,22 @@ struct Carta {
 		parent = _p;
 	}
 
+	Carta(std::string _c, std::string _p)
+	{
+		Cultura c = static_cast<Cultura>(std::stoi(_c));
+		Familiar p = static_cast<Familiar>(std::stoi(_p));
+	}
+
 	std::string toString() 
 	{
-		std::string cString;
-		std::string pString;
-		std::string fString;
 
-		switch (culture)
-		{
-		case Cultura::ARABE:
-			cString = "Árabe";
-			break;
-		case Cultura::BANTU:
-			cString = "Bantú";
-			break;
-		case Cultura::CHINA:
-			cString = "China";
-			break;
-		case Cultura::ESQUIMAL:
-			cString = "Esquimal";
-			break;
-		case Cultura::INDIA:
-			cString = "India";
-			break;
-		case Cultura::MEXICANA:
-			cString = "Mexicana";
-			break;
-		case Cultura::TIROLESA:
-			cString = "Tirolesa";
-			break;
-		default:
-			break;
-		}
+		std::string str;
 
-		switch (parent)
-		{
-		case Familiar::ABUELO:
-			pString = "Abuelo";
-			break;
-		case Familiar::ABUELA:
-			pString = "Abuela";
-			break;
-		case Familiar::PADRE:
-			pString = "Padre";
-			break;
-		case Familiar::MADRE:
-			pString = "Madre";
-			break;
-		case Familiar::HIJO:
-			pString = "Hijo";
-			break;
-		case Familiar::HIJA:
-			pString = "Hija";
-			break;
-		default:
-			break;
-		}
+		int identifier = static_cast<int>(culture);
+		int identifier2 = static_cast<int>(parent);
+		str = std::to_string(identifier) + "_" + std::to_string(identifier2);
 
-		fString = pString + "_" + cString;
-
-		return fString;
+		return str;
 	}
 
 	bool operator== (Carta c) {

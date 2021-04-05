@@ -27,5 +27,39 @@ public:
 	int GetSeed();
 	void SetTurnPos(int _turnPos);
 	int GetTurnPos();
+	void NotifyTurn();
+	void NotifyCardRequest(std::vector<std::string> str);
+	void NotifyHasCard(bool has);
+	void NotifyFamilyCompleted(std::vector<std::string> str);
+	bool isArab(Carta c)
+	{
+		return c.culture == Cultura::ARABE;
+	}
+	bool isBantu(Carta c)
+	{
+		return c.culture == Cultura::BANTU;
+	}
+	bool isChinese(Carta c)
+	{
+		return c.culture == Cultura::CHINA;
+	}
+	bool isEsquimal(Carta c)
+	{
+		return c.culture == Cultura::ESQUIMAL;
+	}
+	bool isIndian(Carta c)
+	{
+		return c.culture == Cultura::INDIA;
+	}
+	bool isMexican(Carta c)
+	{
+		return c.culture == Cultura::MEXICANA;
+	}
+	bool isTirol(Carta c)
+	{
+		return c.culture == Cultura::TIROLESA;
+	}
+
+	void FamilyComplete();
 };
 

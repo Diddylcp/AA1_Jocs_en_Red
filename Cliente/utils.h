@@ -51,11 +51,11 @@ enum class Message_Protocol
     S_ROOM_INFO,
     SEND_PLAYERS_IP_PORT,
     GAMES_FILTRE_SEND,
-    JOIN_GAME,
     NEXT_TURN,
     START_GAME,
     REQUEST_CARD,
-    RESPONSE_REQUEST_CARD
+    RESPONSE_REQUEST_CARD,
+    FAMILY_COMPLETE
 };
 
 static std::string GetMessageProtocolFrom(Message_Protocol index) 
@@ -110,7 +110,6 @@ static Status GetStatus(sf::Socket::Status _status)
     }
     return status;
 }
-
 
 int myRandom(int _seed)
 {

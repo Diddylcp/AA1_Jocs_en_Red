@@ -278,9 +278,6 @@ public:
 			case Message_Protocol::GAMES_FILTRE_SEND:
 
 				break;
-			case Message_Protocol::JOIN_GAME:
-
-				break;
 			default:
 				break;
 			}
