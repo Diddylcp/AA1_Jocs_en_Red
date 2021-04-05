@@ -11,6 +11,8 @@
 class PeerClient
 {
 	//ROOMINFO
+public:
+	/*
 	struct RoomsInfo {
 		int idRoom;
 		int maxClients;
@@ -25,13 +27,13 @@ class PeerClient
 			hasPassword = (_hasPassword == "0" ? true : false);
 		}
 
-		std::string to_string() {
+		std::string toString() {
 			std::string s = std::to_string(idRoom) + " | (" + std::to_string(countClients) + " of " + std::to_string(maxClients) + ") " + (hasPassword ? "CLOSED" : "OPEN");
 			return s;
 		}
 	};
+	*/
 
-public:
 	std::vector<TcpSocket*> clientes;
 	Port port = 0;
 	bool loop = true;
@@ -45,7 +47,7 @@ public:
 
 	void Recieve(TcpSocket* socket);
 
-	void ShowGamesInfo(TcpSocket* socket, std::string message);
+	void ShowGamesInfo(TcpSocket* socket, std::vector<std::string> message);
 	void CreateGame(TcpSocket* socket);
 	void JoinGame(TcpSocket* socket);
 	void JoinCreateRecived(TcpSocket* socket);
