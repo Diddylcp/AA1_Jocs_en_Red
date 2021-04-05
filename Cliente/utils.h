@@ -1,7 +1,10 @@
 #pragma once
 #include <SFML/Network.hpp>
+#include <cstdio>
 #include <string>
-#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
 
 
 #define SEPARATOR_MESSAGE_PROTOCOL "_"
@@ -65,6 +68,18 @@ static std::string GetMessageProtocolFrom(Message_Protocol index)
 static Message_Protocol GetMessageProtocol(std::string index) 
 {
     return static_cast<Message_Protocol>(std::stoi(index));
+}
+
+static std::vector<std::string> split(const std::string& s, char delimiter)
+{
+    std::vector<std::string> tokens;
+    std::string token;
+    std::istringstream tokenStream(s);
+    while (std::getline(tokenStream, token, delimiter))
+    {
+        tokens.push_back(token);
+    }
+    return tokens;
 }
 
 static Status GetStatus(sf::Socket::Status _status)

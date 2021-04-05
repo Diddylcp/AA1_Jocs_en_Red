@@ -7,7 +7,7 @@
 #include <string>
 #include "Selector.h"
 #include "Room.h"
-#include <cstdlib>
+
 
 
 
@@ -56,7 +56,8 @@ public:
 					std::cout << '\t' + (*it)->toString() << std::endl;
 				}
 			}
-			else {
+			else 
+			{
 				std::cout << "---" << std::endl;
 			}
 		}
@@ -90,36 +91,10 @@ public:
 						SendJoinOrCreateGame(newClient);
 
 						sf::Packet p;
-						newClient->Receive(p);
 
-						//
+						Receive(newClient);
+
 						std::cout << "Tenemos " << clientes.size() << " clientes conectados\n";
-						
-						
-						
-						
-						/*
-						sf::Packet packet;
-						ClientData aux;
-						aux.ipAddress = sf::IpAddress::LocalHost.toString();
-						aux.port = newClient->GetRemotePort();
-						packet << aux;
-
-						status = newClient->Send(packet);
-						clientes.push_back(newClient);
-						clientesData.push_back(new ClientData(newClient->GetRemoteIP(), newClient->GetRemotePort()));
-						std::cout << newClient->GetRemoteIP() << ":" << newClient->GetRemotePort() << "  " << aux.ipAddress.ip;
-						newClient->Disconnect();
-						*/
-
-					}
-				
-
-					if (clientes.size() == 4)
-					{
-						std::cout << "Se han conectado 4 personas\n";
-						running = false;
-						listener->Disconnect();
 					}
 				}
 				else 
@@ -143,7 +118,6 @@ public:
 	{
 		sf::Packet pack;
 		std::string s = GetMessageProtocolFrom(Message_Protocol::S_JOIN_OR_CREATE);
-		s = s + "_";
 		pack << s;
 		socket->Send(pack);
 	}
@@ -151,7 +125,7 @@ public:
 	Room* CreateRoom(const int size, const std::string password) 
 	{
 		int unusedRooms = 0;
-		Room* firstEmptyRoom;
+		Room* firstEmptyRoom = nullptr;
 
 		for (int i = 0; i < rooms.size(); i++)
 		{
@@ -173,9 +147,9 @@ public:
 		return firstEmptyRoom;
 	}
 
-	void RecieveJoinOrCreateGame(TcpSocket* socket, std::string message)
+	void ReceiveJoinOrCreateGame(TcpSocket* socket, std::vector<std::string> message)
 	{
-		std::string parameter = message.substr(1, message.find("_"));
+		std::string parameter = message[1];
 
 		if (parameter == "0") // Send different rooms to join
 		{
@@ -191,28 +165,32 @@ public:
 
 			if (hasAvailableRooms) {
 				SendRooms(socket);
+				clientes.push_back(socket);
 			}
 			else
 			{
+				// create and add player to default Room
 				ClientData* c = new ClientData(socket);
 				Room* newRoom = CreateRoom(6, " ");
 				newRoom->AddUserToRoom(c);
+				clientes.push_back(socket);
 			}
 		}
 		else if (parameter == "1") // create game room
 		{
-			int roomSize = std::stoi( message.substr(2, message.find("_")) );
-			parameter = message.substr(3, message.find("_"));
+			int roomSize = std::stoi( message[2]);
+			parameter = message[3];
 
 			ClientData* c = new ClientData(socket);
 			Room* newRoom = CreateRoom(roomSize, parameter);
 			newRoom->AddUserToRoom(c);
+			clientes.push_back(socket);
 		}
 	}
 
 	void JoinRoom(TcpSocket* socket, std::string message) 
 	{
-		//Recieve(socket);
+		//Receive(socket);
 
 
 	}
@@ -264,7 +242,7 @@ public:
 		}
 	}
 
-	void Recieve(TcpSocket * socket) 
+	void Receive(TcpSocket * socket) 
 	{
 		sf::Packet p;
 		Status s = socket->Receive(p);
@@ -275,7 +253,11 @@ public:
 		{
 			std::string s;
 			p >> s;
-			Message_Protocol mp =  GetMessageProtocol(s.substr(0, s.find("_")));
+
+			std::cout << "Message Received: " << s << std::endl;
+			
+			std::vector<std::string> parameters = split(s, '_');
+			Message_Protocol mp =  GetMessageProtocol(parameters[0]);
 			
 			switch (mp)
 			{
@@ -283,7 +265,7 @@ public:
 
 				break;
 			case Message_Protocol::C_JOIN_OR_CREATE:
-				RecieveJoinOrCreateGame(socket, s);
+				ReceiveJoinOrCreateGame(socket, parameters);
 				break;
 			case Message_Protocol::GAMES_INFO:
 				break;
@@ -310,6 +292,7 @@ public:
 
 };
 
+/*
 bool Servidor() {
 	bool running = true;
 	Status status;
@@ -385,8 +368,7 @@ bool Servidor() {
 
 	}
 }
-
-
+*/
 
 int main() {
 

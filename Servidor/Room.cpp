@@ -59,7 +59,7 @@ void Room::StartGame()
 
 std::string Room::toString() 
 {
-	std::string roomInfo = std::to_string(id) + SEPARATOR_MESSAGE_PROTOCOL 
+	std::string roomInfo = std::to_string(id) + " | "
 		+ std::to_string(clients.size()) + " of " + std::to_string(maxUsers);
 	return roomInfo;
 }

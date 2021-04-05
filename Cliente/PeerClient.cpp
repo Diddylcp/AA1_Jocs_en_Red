@@ -121,43 +121,54 @@ void PeerClient::SendMessages()
 
 void PeerClient::Recieve(TcpSocket* socket) {
 	sf::Packet p;
-	socket->Receive(p);
-
-	std::string s;
-	p >> s;
-
-	Message_Protocol mp = GetMessageProtocol(s.substr(0, s.find(SEPARATOR_MESSAGE_PROTOCOL)));
-	switch (mp)
+	
+	Status status = socket->Receive(p);
+	if (status == Status::Disconnected) 
 	{
-	case Message_Protocol::S_JOIN_OR_CREATE:
-		JoinCreateRecived(socket);
-		break;
-	case Message_Protocol::C_JOIN_OR_CREATE:
 
-		break;
-	case Message_Protocol::GAMES_INFO:
-		ShowGamesInfo(socket, s);
-		break;
-	case Message_Protocol::GET_GAMES_INFO:
-
-		break;
-	case Message_Protocol::SEND_PLAYERS_IP_PORT:
-
-		break;
-	case Message_Protocol::GAMES_FILTRE_SEND:
-
-		break;
-	case Message_Protocol::JOIN_GAME:
-
-		break;
-	default:
-		break;
 	}
+	else
+	{
+		std::string s;
+		p >> s;
+		std::vector<std::string> parameters = split(s,'_');
+		std::cout << "Message recived: " << s << std::endl;
+
+		Message_Protocol mp = GetMessageProtocol(parameters[0]);
+		switch (mp)
+		{
+		case Message_Protocol::S_JOIN_OR_CREATE:
+			JoinCreateRecived(socket);
+			break;
+		case Message_Protocol::C_JOIN_OR_CREATE:
+
+			break;
+		case Message_Protocol::GAMES_INFO:
+			ShowGamesInfo(socket, parameters);
+			break;
+		case Message_Protocol::GET_GAMES_INFO:
+
+			break;
+		case Message_Protocol::SEND_PLAYERS_IP_PORT:
+
+			break;
+		case Message_Protocol::GAMES_FILTRE_SEND:
+
+			break;
+		case Message_Protocol::JOIN_GAME:
+
+			break;
+		default:
+			break;
+		}
+	}
+	
 }
 
-void PeerClient::ShowGamesInfo(TcpSocket* socket, std::string message)
+void PeerClient::ShowGamesInfo(TcpSocket* socket, std::vector<std::string> message)
 {
-	int number = std::stoi(message.substr(1, message.find(SEPARATOR_MESSAGE_PROTOCOL)));
+	/*
+	int number = std::stoi(message[1]);
 	RoomsInfo* rooms;
 	rooms = new RoomsInfo[number];
 
@@ -165,16 +176,18 @@ void PeerClient::ShowGamesInfo(TcpSocket* socket, std::string message)
 	{
 		for (int j = 2; j < 4; j += 4)
 		{
-			rooms[i] = RoomsInfo(
-				message.substr((j), message.find(SEPARATOR_MESSAGE_PROTOCOL)),
-				message.substr((j + 1), message.find(SEPARATOR_MESSAGE_PROTOCOL)),
-				message.substr((j + 2), message.find(SEPARATOR_MESSAGE_PROTOCOL)),
-				message.substr((j + 3), message.find(SEPARATOR_MESSAGE_PROTOCOL)));
+			rooms[i] = PeerClient::RoomsInfo(
+				message[ (j),     message.find(SEPARATOR_MESSAGE_PROTOCOL) ),
+				message[ (j + 1), message.find(SEPARATOR_MESSAGE_PROTOCOL) ),
+				message[ (j + 2), message.find(SEPARATOR_MESSAGE_PROTOCOL) ),
+				message[ (j + 3), message.find(SEPARATOR_MESSAGE_PROTOCOL)));
 		}
+		rooms[i].toString();
 	}
 
 
 	Recieve(socket);
+	*/
 }
 
 void PeerClient::CreateGame(TcpSocket* socket)
@@ -226,6 +239,7 @@ void PeerClient::JoinCreateRecived(TcpSocket* socket) {
 
 	if (option == 0) {
 		JoinGame(socket);
+		Recieve(socket);
 	}
 	else {
 		CreateGame(socket);
