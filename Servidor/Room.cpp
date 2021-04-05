@@ -62,9 +62,9 @@ void Room::StartGame()
 	std::string message;
 	for (int i = 0; i < clients.size(); i++) {
 		std::list<ClientData*>::iterator it = clients.begin();
-		message = GetMessageProtocolFrom(Message_Protocol::SEND_PLAYERS_IP_PORT) + std::to_string(i) + "_";
+		message = GetMessageProtocolFrom(Message_Protocol::SEND_PLAYERS_IP_PORT) + std::to_string(i) + SEPARATOR_MESSAGE_PROTOCOL + std::to_string(maxUsers) + SEPARATOR_MESSAGE_PROTOCOL;
 		for (int j = 0; j < i; j++) {
-			message += (*it)->ipAddress.ip.toString() + "_" + std::to_string((*it)->port) + "_";
+			message += (*it)->ipAddress.ip.toString() + SEPARATOR_MESSAGE_PROTOCOL + std::to_string((*it)->port) + SEPARATOR_MESSAGE_PROTOCOL;
 			it++;
 		}
 		sf::Packet pack;

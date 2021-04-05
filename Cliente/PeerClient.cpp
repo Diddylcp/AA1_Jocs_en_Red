@@ -1,6 +1,35 @@
 #include "PeerClient.h"
 
 
+void PeerClient::ConnectToClients(std::vector<std::string> parameters)
+{
+	Status status;
+	int numberofClients = std::stoi(parameters[1]);
+	int maxConnectClients = std::stoi(parameters[2]);
+	for (int i = 0; numberofClients; i++) {
+		int j = i * 2 + 3;
+		TcpSocket* socket = new TcpSocket;
+		status = socket->Connect(parameters[j], std::stoul(parameters[j+1]));
+
+		if (status != Status::Done) {
+			break;
+		}
+
+		clientes.push_back(socket);
+	}
+
+	status = listener.Listen(port);
+	while (clientes.size() < maxConnectClients) {
+		TcpSocket* newClient = new TcpSocket;
+		status = listener.Accept(newClient);
+		if (status == Status::Done) {
+			clientes.push_back(newClient);
+		}
+	}
+	listener.Disconnect();
+
+}
+
 
 void PeerClient::RecepcionClient(TcpSocket* sock)
 {
@@ -156,7 +185,8 @@ void PeerClient::Recieve(TcpSocket* socket) {
 			RoomInfo(socket, parameters);
 			break;
 		case Message_Protocol::SEND_PLAYERS_IP_PORT:
-
+			socket->Disconnect();
+			ConnectToClients(parameters);
 			break;
 		case Message_Protocol::GAMES_FILTRE_SEND:
 
@@ -164,6 +194,7 @@ void PeerClient::Recieve(TcpSocket* socket) {
 		case Message_Protocol::JOIN_GAME:
 
 			break;
+
 		default:
 			break;
 		}
@@ -290,3 +321,5 @@ void PeerClient::JoinCreateRecived(TcpSocket* socket) {
 		//Recieve(socket);
 	}
 }
+
+
