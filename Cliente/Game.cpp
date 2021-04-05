@@ -60,3 +60,20 @@ void Game::CheckTurn()
 		RequestCard();
 	}
 }
+
+void Game::shuffleDeck()
+{
+	std::srand(seed);
+	std::random_shuffle(baraja.begin(), baraja.end(), myRandom);
+}
+
+void Game::reparteCartas()
+{
+	for (int i = 0; i < baraja.size(); i++)
+	{
+		if (i % numPlayers == turnPos)
+		{
+			cartas.push_back(baraja[i]);
+		}
+	}
+}
