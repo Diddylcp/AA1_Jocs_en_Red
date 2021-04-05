@@ -13,10 +13,17 @@ class Game
 	int seed;
 	std::vector<Carta> baraja;
 	int numPlayers;
+public:
+	Game();
 	void RequestCard();
 	void NextTurn();
 	void CheckTurn();
+	void initDeck();
 	void shuffleDeck();
-	void reparteCartas();
+	void dealCards();
+	void SetSeed(int _seed);
+	int GetSeed();
+	void SetTurnPos(int _turnPos);
+	int GetTurnPos();
 };
 
