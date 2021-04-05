@@ -70,3 +70,4 @@ static Status GetStatus(sf::Socket::Status _status)
     }
     return status;
 }
+

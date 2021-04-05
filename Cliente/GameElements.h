@@ -30,6 +30,11 @@ struct Carta {
 	Cultura culture;
 	Familiar parent;
 
+	Carta() {
+		culture = Cultura::COUNT;
+		parent = Familiar::COUNT;
+	}
+
 	Carta(Cultura _c, Familiar _p)
 	{
 		culture = _c;
@@ -113,4 +118,45 @@ void SendRequestCard(Cultura c, Familiar f, int p)
 	pack << p;
 	pack << static_cast<int>(c);
 	pack << static_cast<int>(f);
+}
+
+
+std::istream& operator>> (std::istream& in, Cultura& cult) {
+	int val;
+	if (in >> val) {
+		val--;
+		switch (val) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			cult = Cultura(val);
+			break;
+		default:
+			cult = Cultura::COUNT;
+			break;
+		}
+	}
+}
+
+std::istream& operator>> (std::istream& in, Familiar& fam) {
+	int val;
+	if (in >> val) {
+		val--;
+		switch (val) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			fam = Familiar(val);
+			break;
+		default:
+			fam = Familiar::COUNT;
+			break;
+		}
+	}
 }
