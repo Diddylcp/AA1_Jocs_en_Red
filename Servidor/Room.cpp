@@ -59,11 +59,17 @@ void Room::StartGame()
 	//
 	// eviar mensaje de "ecuchar connect de otros clientes"
 	// al finalizar limpiar / eliminar sala
-	for(int i = 0; i<clients.size();i++)
-	int currClient = 0;
-	for (auto it = clients.begin(); it != clients.end(); ++it) {
-		std::string message = 
-		//(*it)->socket->Send()
+	std::string message;
+	for (int i = 0; i < clients.size(); i++) {
+		std::list<ClientData*>::iterator it = clients.begin();
+		message = GetMessageProtocolFrom(Message_Protocol::SEND_PLAYERS_IP_PORT) + std::to_string(i) + "_";
+		for (int j = 0; j < i; j++) {
+			message += (*it)->ipAddress.ip.toString() + "_" + std::to_string((*it)->port) + "_";
+			it++;
+		}
+		sf::Packet pack;
+		pack << message;
+		(*it)->socket->Send(pack);
 	}
 }
 

@@ -209,22 +209,19 @@ public:
 	}
 
 	void SendRoomInfo(Room* room) {
+		std::string message = GetMessageProtocolFrom(Message_Protocol::S_ROOM_INFO);
+		message += std::to_string(room->clients.size()) + " of " + std::to_string(room->GetMaxUsers()) + "\n";
+
+		sf::Packet p;
+		p << message;
+		for (std::list<ClientData*>::iterator it = room->clients.begin(); it != room->clients.end(); ++it)
+		{
+			(*it)->socket->Send(p);
+		}
 
 		if (room->clients.size() == room->GetMaxUsers()) 
 		{
 			room->StartGame();
-		}
-		else 
-		{
-			std::string message = GetMessageProtocolFrom(Message_Protocol::S_ROOM_INFO);
-			message += std::to_string(room->clients.size())+ " of " + std::to_string(room->GetMaxUsers()) + "\n";
-
-			sf::Packet p;
-			p << message;
-			for (std::list<ClientData*>::iterator it = room->clients.begin(); it != room->clients.end(); ++it)
-			{
-				(*it)->socket->Send(p);
-			}
 		}
 	}
 

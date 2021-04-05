@@ -178,7 +178,7 @@ void PeerClient::ShowGamesInfo(TcpSocket* socket, std::vector<std::string> messa
 	std::string roomsInfoString;
 	std::vector<bool> hasPassword;
 	//?
-	for (int i = 0; i < number-1; i++)
+	for (int i = 0; i < number; i++)
 	{
 		int j = i * 4 + 2;
 
@@ -199,8 +199,8 @@ void PeerClient::ShowGamesInfo(TcpSocket* socket, std::vector<std::string> messa
 		// guardamos si tiene contraseña para pedirla si es necesario
 		hasPassword.push_back((message[j + 3] == "0") ? true : false);
 
-		std::cout << roomsInfoString;
 	}
+	std::cout << roomsInfoString;
 
 	int room;
 	std::cout << SELECT_ROOM << "\n";
