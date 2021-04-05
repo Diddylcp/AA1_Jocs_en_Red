@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Network.hpp>
 #include <string>
+#include <iostream>
 
 
 #define SEPARATOR_MESSAGE_PROTOCOL "_"

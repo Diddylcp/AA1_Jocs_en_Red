@@ -7,6 +7,7 @@
 #include <chrono>
 #include "Selector.h"
 #include "ClientData.h"
+#include "Game.h"
 
 class PeerClient
 {
