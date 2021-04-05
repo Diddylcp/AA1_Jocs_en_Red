@@ -48,6 +48,7 @@ enum class Message_Protocol
     SEND_PLAYERS_IP_PORT,
     GAMES_FILTRE_SEND,
     JOIN_GAME,
+    NEXT_TURN
 
 };
 
