@@ -158,6 +158,8 @@ void PeerClient::Recieve(TcpSocket* socket) {
 		case Message_Protocol::JOIN_GAME:
 
 			break;
+		case Message_Protocol::START_GAME:
+			break;
 		default:
 			break;
 		}
@@ -245,4 +247,11 @@ void PeerClient::JoinCreateRecived(TcpSocket* socket) {
 		CreateGame(socket);
 		Recieve(socket);
 	}
+}
+
+void PeerClient::StartGame()
+{
+	// Repartir Cartas
+
+
 }

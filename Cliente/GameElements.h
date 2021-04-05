@@ -25,6 +25,57 @@ enum class Familiar
 	COUNT
 };
 
+std::string toString(Cultura c) {
+	switch (c) {
+	case Cultura::ARABE:
+		return "Árabe";
+		break;
+	case Cultura::BANTU:
+		return "Bantú";
+		break;
+	case Cultura::CHINA:
+		return "China";
+		break;
+	case Cultura::ESQUIMAL:
+		return "Esquimal";
+		break;
+	case Cultura::INDIA:
+		return "India";
+		break;
+	case Cultura::MEXICANA:
+		return "Mexicana";
+		break;
+	case Cultura::TIROLESA:
+		return "Tirolesa";
+	}
+}
+
+std::string toString(Familiar f) {
+	switch (f)
+	{
+	case Familiar::ABUELO:
+		return "Abuelo";
+		break;
+	case Familiar::ABUELA:
+		return "Abuela";
+		break;
+	case Familiar::PADRE:
+		return "Padre";
+		break;
+	case Familiar::MADRE:
+		return "Madre";
+		break;
+	case Familiar::HIJO:
+		return "Hijo";
+		break;
+	case Familiar::HIJA:
+		return "Hija";
+		break;
+	default:
+		break;
+	}
+}
+
 struct Carta {
 
 	Cultura culture;
@@ -98,7 +149,7 @@ struct Carta {
 			break;
 		}
 
-		fString = pString + " " + cString;
+		fString = pString + "_" + cString;
 
 		return fString;
 	}
@@ -114,7 +165,7 @@ void SendRequestCard(Cultura c, Familiar f, int p)
 {
 	// Pide la carta que tiene la cultura c y el familiar f al jugador p
 	sf::Packet pack;
-	pack << static_cast<int>(Message_Protocol::PEDIR_CARTA);
+	pack << static_cast<int>(Message_Protocol::REQUEST_CARD);
 	pack << p;
 	pack << static_cast<int>(c);
 	pack << static_cast<int>(f);

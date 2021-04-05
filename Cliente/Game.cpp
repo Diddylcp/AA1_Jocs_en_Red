@@ -2,7 +2,7 @@
 
 void Game::RequestCard()
 {
-	std::cout << "Es tu turno! Ahora toca elegir una carta de un jugador\n";
+	
 	int player = -1;
 	Carta request;
 	while (player > clientes.size() && player < 0 && player != turnPos) {
@@ -34,16 +34,19 @@ void Game::RequestCard()
 			<< "6 - HIJA\n";
 		std::cin >> request.parent;
 	}
+	std::string message = GetMessageProtocolFrom(Message_Protocol::REQUEST_CARD) + std::to_string(turnPos) + "_" + std::to_string(player) + "_" + request.toString();
 	sf::Packet pack;
-	pack << 14 << turnPos << player << static_cast<int>(request.culture) << static_cast<int>(request.parent);
-	clientes[player]->Send(pack);
+	pack << message;
+	for (int i = 0; i < clientes.size(); i++) {
+		clientes[i]->Send(pack);
+	}
 
 }
 
 void Game::NextTurn()
 {
 	sf::Packet pack;
-	pack << static_cast<int>(Message_Protocol::NEXT_TURN);
+	pack << GetMessageProtocolFrom(Message_Protocol::NEXT_TURN);
 	for (int i = 0; i < clientes.size(); i++) {
 		Status status = clientes[i]->Send(pack);
 		if (status == Status::Disconnected || status == Status::Error)
@@ -57,6 +60,39 @@ void Game::CheckTurn()
 {
 	if (currTurn == turnPos) {
 		// Need to make a timer
+		std::cout << "Es tu turno! Ahora toca elegir una carta de un jugador\n";
 		RequestCard();
+	}
+}
+
+bool Game::ReceiveCard(std::vector<std::string> parameters)
+{
+	if (parameters[1] == "yes") {
+		std::cout << "Has acertado la carta! Vuelve a elegir otra\n";
+		RequestCard();
+	}
+	else
+		NextTurn();
+}
+
+void Game::CheckCard(std::vector<std::string> parameters)
+{
+	if (std::stoi(parameters[2]) == turnPos) {
+		sf::Packet pack;
+		std::string message;
+		bool haveCard = false;
+		for (int i = 0; i < cartas.size(); i++) {
+			if (toString(cartas[i].culture) == parameters[3] && toString(cartas[i].parent) == parameters[4]) {
+				message = GetMessageProtocolFrom(Message_Protocol::RESPONSE_REQUEST_CARD) + "yes";
+				haveCard = true;
+			}
+		}
+		if (!haveCard) {
+			message = GetMessageProtocolFrom(Message_Protocol::RESPONSE_REQUEST_CARD) + "no";
+		}
+		pack << message;
+		for (int i = 0; i < clientes.size(); i++) {
+			clientes[i]->Send(pack);
+		}
 	}
 }

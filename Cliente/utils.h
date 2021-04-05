@@ -5,6 +5,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
+#include <iostream>
 
 
 #define SEPARATOR_MESSAGE_PROTOCOL "_"
@@ -51,8 +52,10 @@ enum class Message_Protocol
     SEND_PLAYERS_IP_PORT,
     GAMES_FILTRE_SEND,
     JOIN_GAME,
-    NEXT_TURN
-
+    NEXT_TURN,
+    START_GAME,
+    REQUEST_CARD,
+    RESPONSE_REQUEST_CARD
 };
 
 static std::string GetMessageProtocolFrom(Message_Protocol index) 

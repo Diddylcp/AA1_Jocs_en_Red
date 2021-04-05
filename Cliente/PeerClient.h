@@ -52,6 +52,7 @@ public:
 	void CreateGame(TcpSocket* socket);
 	void JoinGame(TcpSocket* socket);
 	void JoinCreateRecived(TcpSocket* socket);
+	void StartGame();
 
 };
 

@@ -13,5 +13,7 @@ class Game
 	void RequestCard();
 	void NextTurn();
 	void CheckTurn();
+	bool ReceiveCard(std::vector<std::string> parameters);
+	void CheckCard(std::vector<std::string> parameters);
 };
 
