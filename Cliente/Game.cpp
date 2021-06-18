@@ -72,7 +72,7 @@ void Game::CheckTurn()
 	}
 }
 
-bool Game::ReceiveCard(std::vector<std::string> parameters)
+void Game::ReceiveCard(std::vector<std::string> parameters)
 {
 	if (parameters[1] == "yes") {
 		std::cout << "Ha acertado la carta! Vuelve a elegir otra\n";
@@ -182,6 +182,7 @@ void Game::NotifyCardRequest(std::vector<std::string> str)
 	CheckCard(str);
 	Carta c(str[3], str[4]);
 	std::cout << "Jugador " + str[2] + "--->" + " Jugador " + std::to_string(currTurn) + " Carta: " + toString(c.culture) + " " + toString(c.parent) << std::endl;
+
 }
 
 void Game::NotifyHasCard(bool has)
@@ -231,7 +232,15 @@ void Game::FamilyComplete()
 	{
 		for (int i = 0; i < arabCounter; i++)
 		{
-			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isArab);
+			std::vector<Carta>::iterator it;
+			for (it = cartas.begin(); it != cartas.end(); it++)
+			{
+				if (isArab(*it)) 
+				{
+					return;
+				}
+			}
+			//std::vector<Carta>::iterator it = std::find_if(begin(cartas), end(cartas), isArab);
 			cartas.erase(it);
 		}
 		points++;
@@ -246,7 +255,14 @@ void Game::FamilyComplete()
 	{
 		for (int i = 0; i < bantuCounter; i++)
 		{
-			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isBantu);
+			std::vector<Carta>::iterator it;
+			for (it = cartas.begin(); it != cartas.end(); it++)
+			{
+				if (isBantu(*it))
+				{
+					return;
+				}
+			}
 			cartas.erase(it);
 		}
 		points++;
@@ -261,7 +277,14 @@ void Game::FamilyComplete()
 	{
 		for (int i = 0; i < chinaCounter; i++)
 		{
-			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isChinese);
+			std::vector<Carta>::iterator it;
+			for (it = cartas.begin(); it != cartas.end(); it++)
+			{
+				if (isChinese(*it))
+				{
+					return;
+				}
+			}
 			cartas.erase(it);
 		}
 		points++;
@@ -276,7 +299,14 @@ void Game::FamilyComplete()
 	{
 		for (int i = 0; i < inuitCounter; i++)
 		{
-			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isEsquimal);
+			std::vector<Carta>::iterator it;
+			for (it = cartas.begin(); it != cartas.end(); it++)
+			{
+				if (isEsquimal(*it))
+				{
+					return;
+				}
+			}
 			cartas.erase(it);
 		}
 		points++;
@@ -291,7 +321,14 @@ void Game::FamilyComplete()
 	{
 		for (int i = 0; i < indianCounter; i++)
 		{
-			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isIndian);
+			std::vector<Carta>::iterator it;
+			for (it = cartas.begin(); it != cartas.end(); it++)
+			{
+				if (isIndian(*it))
+				{
+					return;
+				}
+			}
 			cartas.erase(it);
 		}
 		points++;
@@ -306,7 +343,14 @@ void Game::FamilyComplete()
 	{
 		for (int i = 0; i < mexicanCounter; i++)
 		{
-			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isMexican);
+			std::vector<Carta>::iterator it;
+			for (it = cartas.begin(); it != cartas.end(); it++)
+			{
+				if (isMexican(*it))
+				{
+					return;
+				}
+			}
 			cartas.erase(it);
 		}
 		points++;
@@ -321,7 +365,14 @@ void Game::FamilyComplete()
 	{
 		for (int i = 0; i < tirolCounter; i++)
 		{
-			std::vector<Carta>::iterator it = std::find_if(cartas.begin(), cartas.end(), isTirol);
+			std::vector<Carta>::iterator it;
+			for (it = cartas.begin(); it != cartas.end(); it++)
+			{
+				if (isTirol(*it))
+				{
+					return;
+				}
+			}
 			cartas.erase(it);
 		}
 		points++;

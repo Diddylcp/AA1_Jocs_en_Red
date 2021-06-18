@@ -1,5 +1,5 @@
 #include "GameInfo.h"
-
+/*
 void GameInfo::FamilyComplete()
 {
 	short arabCounter = 0, bantuCounter = 0, chinaCounter = 0, inuitCounter = 0, indianCounter = 0, mexicanCounter = 0, tirolCounter = 0;
@@ -96,3 +96,4 @@ void GameInfo::FamilyComplete()
 		points++;
 	}
 }
+*/

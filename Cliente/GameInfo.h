@@ -11,31 +11,31 @@ class GameInfo
 	GameInfo(int turn) {
 		points = 0;
 	}
-	bool isArab(Carta c)
+	friend bool isArab(Carta c)
 	{
 		return c.culture == Cultura::ARABE;
 	}
-	bool isBantu(Carta c)
+	friend bool isBantu(Carta c)
 	{
 		return c.culture == Cultura::BANTU;
 	}
-	bool isChinese(Carta c)
+	friend bool isChinese(Carta c)
 	{
 		return c.culture == Cultura::CHINA;
 	}
-	bool isEsquimal(Carta c)
+	friend bool isEsquimal(Carta c)
 	{
 		return c.culture == Cultura::ESQUIMAL;
 	}
-	bool isIndian(Carta c)
+	friend bool isIndian(Carta c)
 	{
 		return c.culture == Cultura::INDIA;
 	}
-	bool isMexican(Carta c)
+	friend bool isMexican(Carta c)
 	{
 		return c.culture == Cultura::MEXICANA;
 	}
-	bool isTirol(Carta c)
+	friend bool isTirol(Carta c)
 	{
 		return c.culture == Cultura::TIROLESA;
 	}

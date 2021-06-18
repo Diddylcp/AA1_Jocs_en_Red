@@ -164,6 +164,9 @@ void PeerClient::Recieve(TcpSocket* socket) {
 		case Message_Protocol::REQUEST_CARD:
 			myGame.NotifyCardRequest(parameters);
 			break;
+		case Message_Protocol::RESPONSE_REQUEST_CARD:
+			myGame.ReceiveCard(parameters);
+			break;
 		case Message_Protocol::FAMILY_COMPLETE:
 			myGame.NotifyFamilyCompleted(parameters);
 			break;

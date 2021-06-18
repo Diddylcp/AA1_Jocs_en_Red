@@ -1,5 +1,5 @@
 #include <string>
-#include "utils.h"
+#include "ClientData.h"
 #pragma once
 
 enum class Cultura
@@ -146,6 +146,7 @@ std::istream& operator>> (std::istream& in, Cultura& cult) {
 			break;
 		}
 	}
+	return in;
 }
 
 std::istream& operator>> (std::istream& in, Familiar& fam) {
@@ -166,4 +167,5 @@ std::istream& operator>> (std::istream& in, Familiar& fam) {
 			break;
 		}
 	}
+	return in;
 }

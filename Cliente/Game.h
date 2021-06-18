@@ -1,7 +1,5 @@
 #pragma once
 #include <vector>
-#include "TcpSocket.h"
-#include "utils.h"
 #include "GameElements.h"
 class Game
 {
@@ -18,7 +16,7 @@ public:
 	void RequestCard();
 	void NextTurn();
 	void CheckTurn();
-	bool ReceiveCard(std::vector<std::string> parameters);
+	void ReceiveCard(std::vector<std::string> parameters);
 	void CheckCard(std::vector<std::string> parameters);
 	void initDeck();
 	void shuffleDeck();
@@ -31,6 +29,8 @@ public:
 	void NotifyCardRequest(std::vector<std::string> str);
 	void NotifyHasCard(bool has);
 	void NotifyFamilyCompleted(std::vector<std::string> str);
+	
+	
 	bool isArab(Carta c)
 	{
 		return c.culture == Cultura::ARABE;
