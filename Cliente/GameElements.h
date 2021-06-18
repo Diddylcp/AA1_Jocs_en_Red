@@ -1,6 +1,6 @@
+#pragma once
 #include <string>
 #include "ClientData.h"
-#pragma once
 
 enum class Cultura
 {
@@ -25,7 +25,7 @@ enum class Familiar
 	COUNT
 };
 
-std::string toString(Cultura c) {
+static std::string toString(Cultura c) {
 	switch (c) {
 	case Cultura::ARABE:
 		return "Árabe";
@@ -50,7 +50,7 @@ std::string toString(Cultura c) {
 	}
 }
 
-std::string toString(Familiar f) {
+static std::string toString(Familiar f) {
 	switch (f)
 	{
 	case Familiar::ABUELO:
@@ -100,7 +100,6 @@ struct Carta {
 
 	std::string toString() 
 	{
-
 		std::string str;
 
 		int identifier = static_cast<int>(culture);
@@ -117,7 +116,7 @@ struct Carta {
 };
 
 
-void SendRequestCard(Cultura c, Familiar f, int p)
+static void SendRequestCard(Cultura c, Familiar f, int p)
 {
 	// Pide la carta que tiene la cultura c y el familiar f al jugador p
 	sf::Packet pack;
@@ -128,7 +127,7 @@ void SendRequestCard(Cultura c, Familiar f, int p)
 }
 
 
-std::istream& operator>> (std::istream& in, Cultura& cult) {
+static std::istream& operator>> (std::istream& in, Cultura& cult) {
 	int val;
 	if (in >> val) {
 		val--;
@@ -149,7 +148,7 @@ std::istream& operator>> (std::istream& in, Cultura& cult) {
 	return in;
 }
 
-std::istream& operator>> (std::istream& in, Familiar& fam) {
+static std::istream& operator>> (std::istream& in, Familiar& fam) {
 	int val;
 	if (in >> val) {
 		val--;
