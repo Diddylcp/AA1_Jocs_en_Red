@@ -199,29 +199,24 @@ void PeerClient::Recieve(TcpSocket* socket) {
 	
 }
 
+void PeerClient::GetGames(TcpSocket* socket)
+{
+	std::string msg = GetMessageProtocolFrom(Message_Protocol::GET_GAMES_INFO);
+	sf::Packet pack;
+	pack << msg;
+
+	socket->Send(pack);
+}
+
 void PeerClient::ShowGamesInfo(TcpSocket* socket, std::vector<std::string> message)
 {
-	/*
-	int number = std::stoi(message[1]);
-	RoomsInfo* rooms;
-	rooms = new RoomsInfo[number];
-
-	for (int i = 0; i < number; i++)
+	std::cout << std::endl;
+	for (int i = 0; i < stoi(message[1]); i+=2)
 	{
-		for (int j = 2; j < 4; j += 4)
-		{
-			rooms[i] = PeerClient::RoomsInfo(
-				message[ (j),     message.find(SEPARATOR_MESSAGE_PROTOCOL) ),
-				message[ (j + 1), message.find(SEPARATOR_MESSAGE_PROTOCOL) ),
-				message[ (j + 2), message.find(SEPARATOR_MESSAGE_PROTOCOL) ),
-				message[ (j + 3), message.find(SEPARATOR_MESSAGE_PROTOCOL)));
-		}
-		rooms[i].toString();
+		std::cout << message[2 + i] + "\n";
 	}
-
-
-	Recieve(socket);
-	*/
+	JoinGame(socket, message);
+	
 }
 
 void PeerClient::CreateGame(TcpSocket* socket)
@@ -258,8 +253,30 @@ void PeerClient::CreateGame(TcpSocket* socket)
 	socket->Send(p);
 }
 
-void PeerClient::JoinGame(TcpSocket* socket)
+void PeerClient::JoinGame(TcpSocket* socket, std::vector<std::string> message)
 {
+	const int jump = 3;
+	int idRoom;
+	std::cin >> idRoom;
+
+	std::string msg = GetMessageProtocolFrom(Message_Protocol::C_JOIN_OR_CREATE);
+
+	msg += "0_" + std::to_string(idRoom) + "_";
+
+	std::string password = "";
+	if (message[jump + idRoom] == "1") 
+	{
+		while (password.empty()) {
+			std::cout << "Use password: \n";
+			std::cin >> password;
+		}
+		msg += password;
+
+	}
+	sf::Packet pack;
+	pack << msg;
+
+	socket->Send(pack);
 
 }
 
@@ -272,7 +289,7 @@ void PeerClient::JoinCreateRecived(TcpSocket* socket) {
 	} while (option != 0 && option != 1);
 
 	if (option == 0) {
-		JoinGame(socket);
+		GetGames(socket);
 		Recieve(socket);
 	}
 	else {

@@ -27,9 +27,10 @@ public:
 
 	void Recieve(TcpSocket* socket);
 
+	void GetGames(TcpSocket* socket);
 	void ShowGamesInfo(TcpSocket* socket, std::vector<std::string> message);
 	void CreateGame(TcpSocket* socket);
-	void JoinGame(TcpSocket* socket);
+	void JoinGame(TcpSocket* socket, std::vector<std::string> message);
 	void JoinCreateRecived(TcpSocket* socket);
 	void StartGame();
 

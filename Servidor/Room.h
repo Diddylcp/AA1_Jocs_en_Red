@@ -6,7 +6,7 @@
 class Room
 {
 	unsigned short id;
-	bool hasPassword;
+	bool hasPassword = true;
 	std::string password;
 	unsigned short maxUsers;
 	float creationTime;

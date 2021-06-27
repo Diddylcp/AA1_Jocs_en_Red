@@ -99,7 +99,13 @@ public:
 				}
 				else 
 				{
-
+					for (int i = 0; i < clientes.size(); i++)
+					{
+						if (selector.IsReady(clientes[i])) 
+						{
+							Receive(clientes[i]);
+						}
+					}
 				}
 			}
 		}
@@ -107,6 +113,7 @@ public:
 
 		for (size_t i = 0; i < clientes.size(); i++)
 		{
+			
 			clientes[i]->Disconnect();
 			delete clientes[i];
 		}
@@ -153,27 +160,29 @@ public:
 
 		if (parameter == "0") // Send different rooms to join
 		{
-			bool hasAvailableRooms = false;
-			for (int i = 0; i < rooms.size(); i++) 
+			Room* selectedRoom = rooms[stoi(message[2])];
+			if(selectedRoom != nullptr)
 			{
-				if (rooms[i] != nullptr) 
+				if (selectedRoom->HasPassword())
 				{
-					hasAvailableRooms = true;
-					break;
+					if (selectedRoom->IsPasswordOk(message[3]))
+					{
+						ClientData* c = new ClientData(socket);
+						selectedRoom->AddUserToRoom(c);
+						SendRoomInfo(selectedRoom);
+					}
+					else 
+					{
+						SendRooms(socket);
+					}
 				}
-			}
+				else
+				{
+					ClientData* c = new ClientData(socket);
+					selectedRoom->AddUserToRoom(c);
+					SendRoomInfo(selectedRoom);
+				}
 
-			if (hasAvailableRooms) {
-				SendRooms(socket);
-				clientes.push_back(socket);
-			}
-			else
-			{
-				// create and add player to default Room
-				ClientData* c = new ClientData(socket);
-				Room* newRoom = CreateRoom(6, " ");
-				newRoom->AddUserToRoom(c);
-				clientes.push_back(socket);
 			}
 		}
 		else if (parameter == "1") // create game room
@@ -185,6 +194,8 @@ public:
 			Room* newRoom = CreateRoom(roomSize, parameter);
 			newRoom->AddUserToRoom(c);
 			clientes.push_back(socket);
+			selector.Add(socket);
+			SendRoomInfo(newRoom);
 		}
 	}
 
@@ -200,8 +211,6 @@ public:
 		if (room->clients.size() == room->GetMaxUsers()) 
 		{
 
-
-			
 		}
 		else 
 		{
@@ -212,16 +221,60 @@ public:
 			p << message;
 			for (std::list<ClientData*>::iterator it = room->clients.begin(); it != room->clients.end(); ++it)
 			{
-				//(*it)->socket->Send(p);
+				(*it)->socket->Send(p);
 			}
 		}
 	}
 
 	void SendRooms(TcpSocket* socket)
 	{
+		clientes.push_back(socket);
+		selector.Add(socket);
+	
+		bool hasAvailableRooms = false;
+		for (int i = 0; i < rooms.size(); i++)
+		{
+			if (rooms[i] != nullptr)
+			{
+				hasAvailableRooms = true;
+				break;
+			}
+		}
 
+		if (hasAvailableRooms)
+		{
+			std::string msg = GetMessageProtocolFrom(Message_Protocol::GAMES_INFO);
+
+			std::string gamesInfo;
+
+			int numPartidas = 0;
+			for (int i = 0; i < rooms.size(); i++)
+			{
+				if (rooms[i] != nullptr && !rooms[i]->clients.empty())
+				{
+					gamesInfo += rooms[i]->toString();
+					numPartidas++;
+				}
+			}
+			msg += std::to_string(numPartidas) + "_" + gamesInfo;
+			sf::Packet pack;
+
+			pack << msg;
+			socket->Send(pack);
+		}
+		else
+		{
+			// create and add player to default Room
+			ClientData* c = new ClientData(socket);
+			Room* newRoom = CreateRoom(6, " ");
+			newRoom->AddUserToRoom(c);
+			clientes.push_back(socket);
+			selector.Add(socket);
+			SendRoomInfo(newRoom);
+		}
+
+		
 	}
-
 
 	void SendClientsInfo(Room* room)
 	{
@@ -270,7 +323,7 @@ public:
 			case Message_Protocol::GAMES_INFO:
 				break;
 			case Message_Protocol::GET_GAMES_INFO:
-
+				SendRooms(socket);
 				break;
 			case Message_Protocol::SEND_PLAYERS_IP_PORT:
 
@@ -281,12 +334,8 @@ public:
 			default:
 				break;
 			}
-		}
-
-		//std:string mesaje << ;
-		
+		}		
 	}
-
 };
 
 /*

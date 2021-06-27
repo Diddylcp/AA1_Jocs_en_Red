@@ -1,9 +1,6 @@
 #include "Room.h"
 
-Room::Room()
-{
-
-}
+Room::Room() {}
 
 Room::Room(int _id, int _roomSize, std::string _password)
 {
@@ -61,5 +58,12 @@ std::string Room::toString()
 {
 	std::string roomInfo = std::to_string(id) + " | "
 		+ std::to_string(clients.size()) + " of " + std::to_string(maxUsers);
-	return roomInfo;
+	if (hasPassword) {
+		roomInfo += " | Room with Password_1";
+	}
+	else
+	{
+		roomInfo += " | Room without Password_0";
+	}
+	return roomInfo + "_";
 }
