@@ -40,7 +40,8 @@ void PeerClient::RecepcionClient(TcpSocket* socket, std::vector<std::string> mes
 	if (stoi(message[1]) - 1 > stoi(message[2]))
 	{
 		Status status = listener.Listen(port);
-		while (myGame.clientes.size() < stoi(message[1])) {
+		while (myGame.clientes.size() < stoi(message[1])-1) 
+		{
 			TcpSocket* newClient = new TcpSocket;
 			status = listener.Accept(newClient);
 			std::cout << newClient->GetRemoteIP() + ":" + std::to_string(newClient->GetRemotePort()) + " has conected" << std::endl;
@@ -60,6 +61,7 @@ void PeerClient::RecepcionClient(TcpSocket* socket, std::vector<std::string> mes
 	{
 		seed = myGame.clientes[0]->GetRemotePort();
 	}
+	myGame.numPlayers = stoi(message[1]);
 	myGame.SetSeed(seed);
 	myGame.shuffleDeck();
 	myGame.Update();

@@ -38,7 +38,6 @@ int main() {
 
 	if (okConexion) {
 		// TODO: recibir join or create
-		
 		while (true)
 		{
 			myClients.Recieve(sock);

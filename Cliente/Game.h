@@ -9,8 +9,8 @@ class Game
 	int currTurn;
 	int seed;
 	std::vector<Carta> baraja;
-	int numPlayers;
 public:
+	int numPlayers;
 	std::vector<TcpSocket*> clientes;
 	Game();
 	void RequestCard();

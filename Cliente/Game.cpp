@@ -200,7 +200,7 @@ void Game::NotifyFamilyCompleted(std::vector<std::string> str)
 void Game::Update()
 {
 	system("CLS");
-	std::cout << "Start Game " + std::to_string(numPlayers) + " players\n";
+	std::cout << "Start Game " << numPlayers << " players\n";
 	while (true)
 	{
 

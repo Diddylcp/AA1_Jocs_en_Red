@@ -214,13 +214,6 @@ public:
 		}
 	}
 
-	void JoinRoom(TcpSocket* socket, std::string message) 
-	{
-		//Receive(socket);
-
-
-	}
-
 	void SendRoomInfo(Room* room) {
 
 		if (room->clients.size() == room->GetMaxUsers()) 
@@ -281,7 +274,7 @@ public:
 		{
 			// create and add player to default Room
 			ClientData* c = new ClientData(socket);
-			Room* newRoom = CreateRoom(6, " ");
+			Room* newRoom = CreateRoom(3, " ");
 			newRoom->AddUserToRoom(c);
 			clientes.push_back(socket);
 			selector.Add(socket);
