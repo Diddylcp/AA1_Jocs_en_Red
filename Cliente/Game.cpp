@@ -61,6 +61,8 @@ void Game::NextTurn()
 		}
 	}
 	currTurn++;
+	if (currTurn > clientes.size())
+		currTurn = 0;
 }
 
 void Game::CheckTurn()
@@ -197,14 +199,31 @@ void Game::NotifyFamilyCompleted(std::vector<std::string> str)
 	std::cout << str[1] << std::endl;
 }
 
+void Game::ShowCards()
+{
+	for (int i = 0; i < cartas.size(); i++)
+	{
+		std::cout << cartas[i].toString() << "-->" << toString(cartas[i].culture) << " " << toString(cartas[i].parent) << std::endl;
+	}
+}
+
 void Game::Update()
 {
 	system("CLS");
 	std::cout << "Start Game " << numPlayers << " players\n";
+	ShowCards();
 	while (true)
 	{
-
-
+		if (currTurn == turnPos)
+		{
+			FamilyComplete();
+			ShowCards();
+			CheckTurn();
+			// 1 Pide carta CheckTurn()
+			// 2 Se comprueba que tenga la carta
+			// 3 if(tiene carta) FamilyComplete() y vuelve a pedir carta (1)
+			// 4 else NextTurn en el paso 1
+		}
 	}
 }
 

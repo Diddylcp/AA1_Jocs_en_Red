@@ -63,7 +63,8 @@ void PeerClient::RecepcionClient(TcpSocket* socket, std::vector<std::string> mes
 	}
 	myGame.numPlayers = stoi(message[1]);
 	myGame.SetSeed(seed);
-	myGame.shuffleDeck();
+	myGame.initDeck();
+	myGame.NextTurn();
 	myGame.Update();
 }
 

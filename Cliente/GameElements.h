@@ -28,10 +28,10 @@ enum class Familiar
 static std::string toString(Cultura c) {
 	switch (c) {
 	case Cultura::ARABE:
-		return "Árabe";
+		return "Arabe";
 		break;
 	case Cultura::BANTU:
-		return "Bantú";
+		return "Bantu";
 		break;
 	case Cultura::CHINA:
 		return "China";

@@ -29,6 +29,7 @@ public:
 	void NotifyCardRequest(std::vector<std::string> str);
 	void NotifyHasCard(bool has);
 	void NotifyFamilyCompleted(std::vector<std::string> str);
+	void ShowCards();
 	
 	void Update();
 	bool isArab(Carta c)
