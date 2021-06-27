@@ -7,11 +7,11 @@ class Game
 	std::vector<Carta> cartas;
 	int turnPos;
 	int currTurn;
-	std::vector<TcpSocket*> clientes;
 	int seed;
 	std::vector<Carta> baraja;
 	int numPlayers;
 public:
+	std::vector<TcpSocket*> clientes;
 	Game();
 	void RequestCard();
 	void NextTurn();
@@ -30,7 +30,7 @@ public:
 	void NotifyHasCard(bool has);
 	void NotifyFamilyCompleted(std::vector<std::string> str);
 	
-	
+	void Update();
 	bool isArab(Carta c)
 	{
 		return c.culture == Cultura::ARABE;

@@ -12,8 +12,6 @@ class PeerClient
 	//ROOMINFO
 public:
 	struct RoomsInfo;
-
-	std::vector<TcpSocket*> clientes;
 	Port port = 0;
 	bool loop = true;
 	TcpListener listener;
@@ -21,7 +19,7 @@ public:
 
 	PeerClient() {};
 
-	void RecepcionClient(TcpSocket* sock);
+	void RecepcionClient(TcpSocket* sock, std::vector<std::string> message);
 	void RecepcionMessages();
 	void SendMessages();
 

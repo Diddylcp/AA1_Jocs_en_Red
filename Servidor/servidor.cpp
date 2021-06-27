@@ -48,19 +48,32 @@ public:
 	}
 
 	void PrintRooms() {
+		std::vector<Room*> erase;
+
 		for (int i = 0; i < rooms.size(); i++) {
 			if (rooms[i] != nullptr) {
-				std::cout << rooms[i]->toString() << std::endl; 
-				for (std::list<ClientData*>::iterator it = rooms[i]->clients.begin(); it != rooms[i]->clients.end(); ++it)
+				if (!rooms[i]->clients.empty())
 				{
-					std::cout << '\t' + (*it)->toString() << std::endl;
+					std::cout << rooms[i]->toString() << std::endl; 
+					for (std::list<ClientData*>::iterator it = rooms[i]->clients.begin(); it != rooms[i]->clients.end(); ++it)
+					{
+						std::cout << '\t' + (*it)->toString() << std::endl;
+					}
 				}
+				else
+				{
+					std::cout << "---" << std::endl;
+					erase.push_back(rooms[i]);
+					rooms[i] = nullptr;
+				}
+				
 			}
 			else 
 			{
 				std::cout << "---" << std::endl;
 			}
 		}
+		erase.clear();
 	}
 
 	bool ManageRooms() 
@@ -169,6 +182,7 @@ public:
 					{
 						ClientData* c = new ClientData(socket);
 						selectedRoom->AddUserToRoom(c);
+						selector.Add(socket);
 						SendRoomInfo(selectedRoom);
 					}
 					else 
@@ -180,6 +194,7 @@ public:
 				{
 					ClientData* c = new ClientData(socket);
 					selectedRoom->AddUserToRoom(c);
+					selector.Add(socket);
 					SendRoomInfo(selectedRoom);
 				}
 
@@ -272,8 +287,6 @@ public:
 			selector.Add(socket);
 			SendRoomInfo(newRoom);
 		}
-
-		
 	}
 
 	void SendClientsInfo(Room* room)
@@ -301,6 +314,29 @@ public:
 		Status s = socket->Receive(p);
 		if (s == Status::Disconnected) {
 			//error
+			selector.Remove(socket);
+			std::vector<TcpSocket*>::iterator it = clientes.begin();
+			while (it != clientes.end()) 
+			{
+				if ((*it) == socket) {
+					clientes.erase(it);
+					break;
+				}
+			}
+			for (int i = 0; i < rooms.size(); i++)
+			{
+				if (rooms[i] != nullptr && !rooms[i]->clients.empty()) 
+				{
+					for (std::list<ClientData*>::iterator it = rooms[i]->clients.begin(); it != rooms[i]->clients.end(); ++it)
+					{
+						if ((*it)->socket == socket) 
+						{
+							rooms[i]->clients.erase(it);
+							break;
+						}
+					}
+				}
+			}
 		}
 		else 
 		{

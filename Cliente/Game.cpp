@@ -3,7 +3,7 @@
 Game::Game()
 {
 	points = 0;
-	currTurn = 0;
+	currTurn = -1;
 }
 
 void Game::RequestCard()
@@ -175,6 +175,7 @@ void Game::NotifyTurn()
 {
 	currTurn++;
 	std::cout << "Ha cambiado el turno, le toca al Jugador " + currTurn << std::endl;
+
 }
 
 void Game::NotifyCardRequest(std::vector<std::string> str)
@@ -194,6 +195,17 @@ void Game::NotifyHasCard(bool has)
 void Game::NotifyFamilyCompleted(std::vector<std::string> str)
 {
 	std::cout << str[1] << std::endl;
+}
+
+void Game::Update()
+{
+	system("CLS");
+	std::cout << "Start Game " + std::to_string(numPlayers) + " players\n";
+	while (true)
+	{
+
+
+	}
 }
 
 void Game::FamilyComplete()

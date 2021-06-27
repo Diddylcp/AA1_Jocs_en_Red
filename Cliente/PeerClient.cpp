@@ -21,53 +21,48 @@ struct PeerClient::RoomsInfo {
 	}
 };
 
-void PeerClient::RecepcionClient(TcpSocket* sock)
+void PeerClient::RecepcionClient(TcpSocket* socket, std::vector<std::string> message)
 {
 	Status status;
-	while (loop)
-	{
-		sf::Packet pack;
-		port = sock->GetLocalPort();
-		status = sock->Receive(pack);
 
-		if (status == Status::Done) {
-			ClientData aux;
-			pack >> aux;
-			std::cout << aux.ipAddress.ip << ":" << aux.port << std::endl;
-			if (aux.ipAddress.ip == sf::IpAddress::LocalHost) {
+	port = socket->GetLocalPort();
+	socket->Disconnect();
+	myGame.SetTurnPos(stoi(message[2]));
 
-				sock->Disconnect();
-				std::cout << "He recibido el LocalHost\n";
-				break;
-			}
-			else {
-				TcpSocket* socket = new TcpSocket;
-				status = socket->Connect(aux.ipAddress.ip.toString(), aux.port);
-
-				if (status != Status::Done) {
-					break;
-				}
-
-				clientes.push_back(socket);
-
-			}
-		}
-		else if (status == Status::Disconnected) {
-			break;
-		}
-
+	for (int i = 3; i < message.size(); i += 2) {
+		TcpSocket* sock = new TcpSocket;
+		status = sock->Connect(message[i], stoi(message[i + 1]));
+		myGame.clientes.push_back(sock);
 	}
-	if (status == Status::Done) {
+
+	//		3-1 = 2			>=2
+	//   if maxUsers-1 > clientsSent
+	if (stoi(message[1]) - 1 > stoi(message[2]))
+	{
 		Status status = listener.Listen(port);
-		while (clientes.size() < 3) {
+		while (myGame.clientes.size() < stoi(message[1])) {
 			TcpSocket* newClient = new TcpSocket;
 			status = listener.Accept(newClient);
+			std::cout << newClient->GetRemoteIP() + ":" + std::to_string(newClient->GetRemotePort()) + " has conected" << std::endl;
+
 			if (status == Status::Done) {
-				clientes.push_back(newClient);
+				myGame.clientes.push_back(newClient);
 			}
 		}
 		listener.Disconnect();
 	}
+	int seed;
+	if (myGame.GetTurnPos() == 0)
+	{
+		seed = port;
+	}
+	else 
+	{
+		seed = myGame.clientes[0]->GetRemotePort();
+	}
+	myGame.SetSeed(seed);
+	myGame.shuffleDeck();
+	myGame.Update();
 }
 
 void PeerClient::RecepcionMessages()
@@ -75,38 +70,38 @@ void PeerClient::RecepcionMessages()
 	bool running = true;
 	Status status;
 	Selector selector;
-	for (size_t i = 0; i < clientes.size(); i++)
+	for (size_t i = 0; i < myGame.clientes.size(); i++)
 	{
-		selector.Add(clientes[i]);
+		selector.Add(myGame.clientes[i]);
 	}
 
 	while (loop) {
 		// Make the selector wait for data on any socket
 		if (selector.Wait())
 		{
-			for (size_t i = 0; i < clientes.size(); i++)
+			for (size_t i = 0; i < myGame.clientes.size(); i++)
 			{
-				if (selector.IsReady(clientes[i]))
+				if (selector.IsReady(myGame.clientes[i]))
 				{
 					// The client has sent some data, we can receive it
 					sf::Packet packet;
-					status = clientes[i]->Receive(packet);
+					status = myGame.clientes[i]->Receive(packet);
 					if (status == Status::Done)
 					{
 						std::string strRec;
 						packet >> strRec;
-						std::cout << "He recibido " << strRec << " del puerto " << clientes[i]->GetRemotePort()<< std::endl;
+						std::cout << "He recibido " << strRec << " del puerto " << myGame.clientes[i]->GetRemotePort()<< std::endl;
 					}
 					else if (status == Status::Disconnected)
 					{
-						selector.Remove(clientes[i]);
+						selector.Remove(myGame.clientes[i]);
 						loop = false;
 						std::cout << "Elimino el socket que se ha desconectado\n";
 					}
 					else
 					{
 						loop = false;
-						std::cout << "Error al recibir de " << clientes[i]->GetRemotePort()<< std::endl;
+						std::cout << "Error al recibir de " << myGame.clientes[i]->GetRemotePort()<< std::endl;
 					}
 				}
 			}
@@ -127,9 +122,9 @@ void PeerClient::SendMessages()
 		sf::Packet packet;
 		packet << message;
 
-		for (size_t i = 0; i < clientes.size(); i++)
+		for (size_t i = 0; i < myGame.clientes.size(); i++)
 		{
-			status = clientes[i]->Send(packet);
+			status = myGame.clientes[i]->Send(packet);
 
 			if (status == Status::Disconnected || message == "exit")
 			{
@@ -140,15 +135,16 @@ void PeerClient::SendMessages()
 	}
 }
 
-void PeerClient::Recieve(TcpSocket* socket) {
+void PeerClient::Recieve(TcpSocket* socket) 
+{
 	sf::Packet p;
 	
 	Status status = socket->Receive(p);
 	if (status == Status::Disconnected) 
 	{
-
+	
 	}
-	else
+	else if(status == Status::Done)
 	{
 		std::string s;
 		p >> s;
@@ -171,7 +167,7 @@ void PeerClient::Recieve(TcpSocket* socket) {
 
 			break;
 		case Message_Protocol::SEND_PLAYERS_IP_PORT:
-
+			RecepcionClient(socket, parameters);
 			break;
 		case Message_Protocol::GAMES_FILTRE_SEND:
 
@@ -196,7 +192,6 @@ void PeerClient::Recieve(TcpSocket* socket) {
 			break;
 		}
 	}
-	
 }
 
 void PeerClient::GetGames(TcpSocket* socket)
@@ -277,7 +272,6 @@ void PeerClient::JoinGame(TcpSocket* socket, std::vector<std::string> message)
 	pack << msg;
 
 	socket->Send(pack);
-
 }
 
 void PeerClient::JoinCreateRecived(TcpSocket* socket) {
@@ -290,11 +284,9 @@ void PeerClient::JoinCreateRecived(TcpSocket* socket) {
 
 	if (option == 0) {
 		GetGames(socket);
-		Recieve(socket);
 	}
 	else {
 		CreateGame(socket);
-		Recieve(socket);
 	}
 }
 

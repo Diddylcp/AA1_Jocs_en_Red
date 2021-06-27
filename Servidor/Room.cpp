@@ -37,7 +37,14 @@ bool Room::IsPasswordOk(std::string _password)
 
 void Room::AddUserToRoom(ClientData* _clientData)
 {
-	clients.push_back(_clientData);
+	if(clients.size()<maxUsers)
+	{
+		clients.push_back(_clientData);
+		if (clients.size() == maxUsers) 
+		{
+			StartGame();
+		}
+	}
 }
 
 void Room::DisconnectUserFromRoom(ClientData* _clientData)
@@ -52,6 +59,35 @@ void Room::StartGame()
 	//
 	// eviar mensaje de "ecuchar connect de otros clientes"
 	// al finalizar limpiar / eliminar sala
+	for (int i = 0; i < clients.size(); i++) 
+	{
+		std::string message = GetMessageProtocolFrom(Message_Protocol::SEND_PLAYERS_IP_PORT) + std::to_string(maxUsers) + "_";
+		message += std::to_string(i) + "_";
+
+		int j = 0;
+		for(std::list<ClientData*>::iterator it = clients.begin(); it != clients.end(); ++it )
+		{
+			if (i != j) {
+				message += (*it)->toString() + "_";
+				j++;
+			}
+			else 
+			{
+				break;
+			}
+		}
+		sf::Packet pack;
+		pack << message;
+		std::list<ClientData*>::iterator it2 = clients.begin();
+
+		for (int j = 0; j < i; j++) {
+			it2++;
+		}
+
+		(*it2)->socket->Send(pack);
+
+	}
+	clients.clear();
 }
 
 std::string Room::toString() 

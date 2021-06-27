@@ -16,6 +16,11 @@ void SendingMessages(PeerClient* myClients)
 	myClients->SendMessages();
 }
 
+void Receive(PeerClient* myClients, TcpSocket *socket)
+{
+	myClients->Recieve(socket);
+}
+
 int main() {
 	bool okConexion;
 
@@ -33,24 +38,27 @@ int main() {
 
 	if (okConexion) {
 		// TODO: recibir join or create
-		myClients.Recieve(sock);
+		
+		while (true)
+		{
+			myClients.Recieve(sock);
+		}
 
-		myClients.RecepcionClient(sock);
-		std::thread tSend(SendingMessages, &myClients);
-		tSend.detach();
-		myClients.RecepcionMessages();
+		//std::thread tSend(SendingMessages, &myClients);
+		//tSend.detach();
+		//myClients.RecepcionMessages();
 	}
 	else
 	{
 		std::cout << "Error en el connect....cerrando el programa";
 	}
 
-	for (size_t i = 0; i < myClients.clientes.size(); i++)
+	for (size_t i = 0; i < myClients.myGame.clientes.size(); i++)
 	{
-		myClients.clientes[i]->Disconnect();
-		delete myClients.clientes[i];
+		myClients.myGame.clientes[i]->Disconnect();
+		delete myClients.myGame.clientes[i];
 	}
-	myClients.clientes.clear();
+	myClients.myGame.clientes.clear();
 	system("pause");
 	return 0;
 }
