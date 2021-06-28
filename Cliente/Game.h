@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "GameInfo.h"
+#include "GameElements.h"
 class Game
 {
 	int points;

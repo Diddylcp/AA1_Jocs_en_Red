@@ -156,7 +156,6 @@
     <ClCompile Include="ClientData.cpp" />
     <ClCompile Include="cliente.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameInfo.cpp" />
     <ClCompile Include="PeerClient.cpp" />
     <ClCompile Include="Selector.cpp" />
     <ClCompile Include="TcpListener.cpp" />
@@ -166,7 +165,6 @@
     <ClInclude Include="ClientData.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameElements.h" />
-    <ClInclude Include="GameInfo.h" />
     <ClInclude Include="InputMemoryStream.h" />
     <ClInclude Include="OutputMemoryStream.h" />
     <ClInclude Include="PeerClient.h" />

@@ -70,8 +70,10 @@ void Game::NextTurn()
 		}
 	}
 	currTurn++;
-	if (currTurn > clientes.size())
+	if (currTurn > numPlayers-1)
 		currTurn = 0;
+
+	Update();
 }
 
 void Game::CheckTurn()
@@ -188,7 +190,7 @@ void Game::NotifyTurn()
 {
 	currTurn++;
 	std::cout << "Ha cambiado el turno, le toca al Jugador " + currTurn << std::endl;
-
+	Update();
 }
 
 void Game::NotifyCardRequest(std::vector<std::string> str)
@@ -221,14 +223,17 @@ void Game::ShowCards()
 void Game::Update()
 {
 	system("CLS");
-	std::cout << "Start Game " << numPlayers << " players\n";
+	std::cout << "Start Game " << numPlayers << " players\n" ;
+	for (auto it = clientes.begin(); it != clientes.end(); it++)
+	{
+		std::cout << " - Jugador - " << (*it)->GetRemoteIP() << ":" << (*it)->GetRemotePort() << std::endl;
+	}
 	ShowCards();
 	
 	if (currTurn == turnPos && !isWaiting)
 	{
 		FamilyComplete();
 		CheckTurn();
-		ShowCards();
 		// 1 Pide carta CheckTurn()
 		// 2 Se comprueba que tenga la carta
 		// 3 if(tiene carta) FamilyComplete() y vuelve a pedir carta (1)

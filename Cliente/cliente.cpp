@@ -16,10 +16,12 @@ void SendingMessages(PeerClient* myClients)
 	myClients->SendMessages();
 }
 
-void Receive(PeerClient* myClients, TcpSocket *socket)
+/*void Receive(PeerClient& myClients, TcpSocket *socket)
 {
-	myClients->Recieve(socket);
-}
+	while (myClients.loop) {
+		myClients.PeerReceive(socket);
+	}
+}*/
 
 int main() {
 	bool okConexion;
@@ -38,13 +40,13 @@ int main() {
 
 	if (okConexion) {
 		// TODO: recibir join or create
-		while (true)
+
+		std::thread tReceive(&PeerClient::PeerReceive, myClients, sock);
+		tReceive.detach();
+		
+		while (myClients.loop)
 		{
-			myClients.Recieve(sock);
-			if (myClients.inGame)
-			{
-				myClients.myGame.Update();
-			}
+			/*if (myClients.inGame){myClients.myGame.Update(); }*/
 		}
 
 		//std::thread tSend(SendingMessages, &myClients);
