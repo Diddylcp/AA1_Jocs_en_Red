@@ -106,10 +106,10 @@ public:
 						sf::Packet p;
 						Status s;
 						Receive(newClient, s);
-						if (s == Status::Disconnected) {
+						/*if (s == Status::Disconnected) {
 							selector.Remove(newClient);
 						}
-
+						*/
 						std::cout << "Tenemos " << clientes.size() << " clientes conectados\n";
 					}
 				}
@@ -121,9 +121,9 @@ public:
 						{
 							Status s;
 							Receive(clientes[i], s);
-							if (s == Status::Disconnected) {
+							/*if (s == Status::Disconnected) {
 								selector.Remove(clientes[i]);
-							}
+							}*/
 						}
 					}
 				}

@@ -64,7 +64,8 @@ void PeerClient::RecepcionClient(TcpSocket* socket, std::vector<std::string> mes
 	myGame.numPlayers = stoi(message[1]);
 	myGame.SetSeed(seed);
 	myGame.initDeck();
-	myGame.NextTurn();
+	//myGame.NextTurn();
+	myGame.Update();
 	inGame = true;
 }
 
@@ -86,15 +87,15 @@ void PeerClient::RecepcionMessages()
 			{
 				if (selector.IsReady(myGame.clientes[i]))
 				{
-					auto sock = myGame.clientes[i];
+					//auto sock = myGame.clientes[i];
 					// The client has sent some data, we can receive it
-					sf::Packet packet;
-					PeerReceive(sock, status);
+					//sf::Packet packet;
+					PeerReceive(myGame.clientes[i], status);
 					if (status == Status::Done)
 					{
-						std::string strRec;
+						/*std::string strRec;
 						packet >> strRec;
-						std::cout << "He recibido " << strRec << " del puerto " << myGame.clientes[i]->GetRemotePort()<< std::endl;
+						std::cout << "He recibido " << strRec << " del puerto " << myGame.clientes[i]->GetRemotePort()<< std::endl;*/
 					}
 					else if (status == Status::Disconnected)
 					{

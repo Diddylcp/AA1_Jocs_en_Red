@@ -94,8 +94,8 @@ struct Carta {
 
 	Carta(std::string _c, std::string _p)
 	{
-		Cultura c = static_cast<Cultura>(std::stoi(_c));
-		Familiar p = static_cast<Familiar>(std::stoi(_p));
+		culture = static_cast<Cultura>(std::stoi(_c));
+		parent = static_cast<Familiar>(std::stoi(_p));
 	}
 
 	std::string toString() 

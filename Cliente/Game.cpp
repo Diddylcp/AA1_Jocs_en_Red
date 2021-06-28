@@ -3,7 +3,7 @@
 Game::Game()
 {
 	points = 0;
-	currTurn = -1;
+	currTurn = 0;
 	isWaiting = false;
 }
 
@@ -13,7 +13,7 @@ void Game::RequestCard()
 	int player = -1;
 	Carta request;
 	while (player < 0 || player == turnPos || player > clientes.size()) {
-		std::cout << "Escribe el numero del jugador que quieras robar la carta\n";
+		std::cout << "Escribe el numero del jugador que quieras robar la carta" << std::endl;
 		int j = 0;
 		for (int i = 0; i < clientes.size(); i++)
 		{
