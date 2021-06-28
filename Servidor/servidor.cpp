@@ -104,8 +104,11 @@ public:
 						SendJoinOrCreateGame(newClient);
 
 						sf::Packet p;
-
-						Receive(newClient);
+						Status s;
+						Receive(newClient, s);
+						if (s == Status::Disconnected) {
+							selector.Remove(newClient);
+						}
 
 						std::cout << "Tenemos " << clientes.size() << " clientes conectados\n";
 					}
@@ -116,7 +119,11 @@ public:
 					{
 						if (selector.IsReady(clientes[i])) 
 						{
-							Receive(clientes[i]);
+							Status s;
+							Receive(clientes[i], s);
+							if (s == Status::Disconnected) {
+								selector.Remove(clientes[i]);
+							}
 						}
 					}
 				}
@@ -126,7 +133,6 @@ public:
 
 		for (size_t i = 0; i < clientes.size(); i++)
 		{
-			
 			clientes[i]->Disconnect();
 			delete clientes[i];
 		}
@@ -301,10 +307,10 @@ public:
 		}
 	}
 
-	void Receive(TcpSocket * socket) 
+	void Receive(TcpSocket * socket, Status& s) 
 	{
 		sf::Packet p;
-		Status s = socket->Receive(p);
+		s = socket->Receive(p);
 		if (s == Status::Disconnected) {
 			//error
 			selector.Remove(socket);
