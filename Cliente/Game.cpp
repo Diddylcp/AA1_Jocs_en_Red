@@ -4,6 +4,7 @@ Game::Game()
 {
 	points = 0;
 	currTurn = -1;
+	isWaiting = false;
 }
 
 void Game::RequestCard()
@@ -11,10 +12,18 @@ void Game::RequestCard()
 	
 	int player = -1;
 	Carta request;
-	while (player > clientes.size() && player < 0 && player != turnPos) {
+	while (player < 0 || player == turnPos || player > clientes.size()) {
 		std::cout << "Escribe el numero del jugador que quieras robar la carta\n";
+		int j = 0;
 		for (int i = 0; i < clientes.size(); i++)
-			std::cout << i << " - Jugador " << i << std::endl;
+		{
+			if (i == turnPos)
+			{
+				j++;
+			}
+			std::cout << j << " - Jugador " << j << std::endl;
+			j++;
+		}
 		std::cin >> player;
 	}
 	while (request.culture == Cultura::COUNT) {
@@ -46,7 +55,7 @@ void Game::RequestCard()
 	for (int i = 0; i < clientes.size(); i++) {
 		clientes[i]->Send(pack);
 	}
-
+	isWaiting = true;
 }
 
 void Game::NextTurn()
@@ -80,10 +89,11 @@ void Game::ReceiveCard(std::vector<std::string> parameters)
 		std::cout << "Ha acertado la carta! Vuelve a elegir otra\n";
 		if (currTurn == turnPos)
 		{
+			NotifyHasCard(true);
 			Carta card(parameters[2], parameters[3]);
 			cartas.push_back(card);
 			FamilyComplete();
-			RequestCard();
+			//RequestCard();
 		}
 	}
 	else
@@ -91,6 +101,7 @@ void Game::ReceiveCard(std::vector<std::string> parameters)
 		NotifyHasCard(false);
 		NextTurn();
 	}
+	isWaiting = false;
 }
 
 void Game::CheckCard(std::vector<std::string> parameters)
@@ -212,18 +223,16 @@ void Game::Update()
 	system("CLS");
 	std::cout << "Start Game " << numPlayers << " players\n";
 	ShowCards();
-	while (true)
+	
+	if (currTurn == turnPos && !isWaiting)
 	{
-		if (currTurn == turnPos)
-		{
-			FamilyComplete();
-			CheckTurn();
-			ShowCards();
-			// 1 Pide carta CheckTurn()
-			// 2 Se comprueba que tenga la carta
-			// 3 if(tiene carta) FamilyComplete() y vuelve a pedir carta (1)
-			// 4 else NextTurn en el paso 1
-		}
+		FamilyComplete();
+		CheckTurn();
+		ShowCards();
+		// 1 Pide carta CheckTurn()
+		// 2 Se comprueba que tenga la carta
+		// 3 if(tiene carta) FamilyComplete() y vuelve a pedir carta (1)
+		// 4 else NextTurn en el paso 1
 	}
 }
 

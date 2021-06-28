@@ -41,6 +41,10 @@ int main() {
 		while (true)
 		{
 			myClients.Recieve(sock);
+			if (myClients.inGame)
+			{
+				myClients.myGame.Update();
+			}
 		}
 
 		//std::thread tSend(SendingMessages, &myClients);

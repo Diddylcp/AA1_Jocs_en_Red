@@ -11,6 +11,8 @@ class Game
 	std::vector<Carta> baraja;
 public:
 	int numPlayers;
+	bool isWaiting;
+
 	std::vector<TcpSocket*> clientes;
 	Game();
 	void RequestCard();

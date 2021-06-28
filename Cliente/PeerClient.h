@@ -16,7 +16,7 @@ public:
 	bool loop = true;
 	TcpListener listener;
 	Game myGame;
-
+	bool inGame = false;
 	PeerClient() {};
 
 	void RecepcionClient(TcpSocket* sock, std::vector<std::string> message);

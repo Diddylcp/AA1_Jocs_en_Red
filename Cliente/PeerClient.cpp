@@ -65,7 +65,7 @@ void PeerClient::RecepcionClient(TcpSocket* socket, std::vector<std::string> mes
 	myGame.SetSeed(seed);
 	myGame.initDeck();
 	myGame.NextTurn();
-	myGame.Update();
+	inGame = true;
 }
 
 void PeerClient::RecepcionMessages()
@@ -99,11 +99,13 @@ void PeerClient::RecepcionMessages()
 					{
 						selector.Remove(myGame.clientes[i]);
 						loop = false;
+						inGame = false;
 						std::cout << "Elimino el socket que se ha desconectado\n";
 					}
 					else
 					{
 						loop = false;
+						inGame = false;
 						std::cout << "Error al recibir de " << myGame.clientes[i]->GetRemotePort()<< std::endl;
 					}
 				}
