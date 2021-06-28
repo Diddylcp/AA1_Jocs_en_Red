@@ -86,9 +86,10 @@ void PeerClient::RecepcionMessages()
 			{
 				if (selector.IsReady(myGame.clientes[i]))
 				{
+					auto sock = myGame.clientes[i];
 					// The client has sent some data, we can receive it
 					sf::Packet packet;
-					status = myGame.clientes[i]->Receive(packet);
+					PeerReceive(sock, status);
 					if (status == Status::Done)
 					{
 						std::string strRec;
@@ -139,23 +140,81 @@ void PeerClient::SendMessages()
 		}
 	}
 }
-
-void PeerClient::PeerReceive(TcpSocket* socket) 
+void PeerClient::PeerReceive(TcpSocket* socket, Status& status)
 {
-	while (loop)
+	sf::Packet p;
+
+	status = socket->Receive(p);
+	if (status == Status::Disconnected)
+	{
+
+	}
+	else if (status == Status::Done)
+	{
+		std::string s;
+		p >> s;
+		std::vector<std::string> parameters = split(s, '_');
+		std::cout << "Message recived: " << s << std::endl;
+
+		Message_Protocol mp = GetMessageProtocol(parameters[0]);
+		switch (mp)
+		{
+		case Message_Protocol::S_JOIN_OR_CREATE:
+			JoinCreateRecived(socket);
+			break;
+		case Message_Protocol::C_JOIN_OR_CREATE:
+
+			break;
+		case Message_Protocol::GAMES_INFO:
+			ShowGamesInfo(socket, parameters);
+			break;
+		case Message_Protocol::GET_GAMES_INFO:
+
+			break;
+		case Message_Protocol::SEND_PLAYERS_IP_PORT:
+			RecepcionClient(socket, parameters);
+			break;
+		case Message_Protocol::GAMES_FILTRE_SEND:
+
+			break;
+		case Message_Protocol::START_GAME:
+			myGame.initDeck();
+			break;
+		case Message_Protocol::NEXT_TURN:
+			myGame.NotifyTurn();
+			break;
+		case Message_Protocol::REQUEST_CARD:
+			myGame.NotifyCardRequest(parameters);
+			break;
+		case Message_Protocol::RESPONSE_REQUEST_CARD:
+			myGame.ReceiveCard(parameters);
+			break;
+		case Message_Protocol::FAMILY_COMPLETE:
+			myGame.NotifyFamilyCompleted(parameters);
+			break;
+
+		default:
+			break;
+		}
+	}
+}
+
+void PeerClient::Receive(TcpSocket* socket) 
+{
+	while (!inGame)
 	{
 		sf::Packet p;
-	
+
 		Status status = socket->Receive(p);
-		if (status == Status::Disconnected) 
+		if (status == Status::Disconnected)
 		{
-	
+
 		}
-		else if(status == Status::Done)
+		else if (status == Status::Done)
 		{
 			std::string s;
 			p >> s;
-			std::vector<std::string> parameters = split(s,'_');
+			std::vector<std::string> parameters = split(s, '_');
 			std::cout << "Message recived: " << s << std::endl;
 
 			Message_Protocol mp = GetMessageProtocol(parameters[0]);
@@ -199,8 +258,8 @@ void PeerClient::PeerReceive(TcpSocket* socket)
 				break;
 			}
 		}
-
 	}
+	
 }
 
 void PeerClient::GetGames(TcpSocket* socket)

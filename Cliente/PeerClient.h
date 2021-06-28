@@ -23,7 +23,8 @@ public:
 	void RecepcionMessages();
 	void SendMessages();
 
-	void PeerReceive(TcpSocket* socket);
+	void PeerReceive(TcpSocket* socket, Status& status);
+	void Receive(TcpSocket* socket);
 
 	void GetGames(TcpSocket* socket);
 	void ShowGamesInfo(TcpSocket* socket, std::vector<std::string> message);

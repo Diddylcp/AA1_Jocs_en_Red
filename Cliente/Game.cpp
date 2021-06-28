@@ -53,7 +53,8 @@ void Game::RequestCard()
 	sf::Packet pack;
 	pack << message;
 	for (int i = 0; i < clientes.size(); i++) {
-		clientes[i]->Send(pack);
+		Status s = clientes[i]->Send(pack);
+		std::cout << static_cast<int>(s) << " status";
 	}
 	isWaiting = true;
 }

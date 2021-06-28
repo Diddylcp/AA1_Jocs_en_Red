@@ -41,17 +41,19 @@ int main() {
 	if (okConexion) {
 		// TODO: recibir join or create
 
-		std::thread tReceive(&PeerClient::PeerReceive, myClients, sock);
-		tReceive.detach();
+		std::thread tserverReceive(&PeerClient::Receive , &myClients, sock);
+		tserverReceive.detach();
 		
-		while (myClients.loop)
+		while (!myClients.inGame)
 		{
 			/*if (myClients.inGame){myClients.myGame.Update(); }*/
 		}
-
-		//std::thread tSend(SendingMessages, &myClients);
-		//tSend.detach();
-		//myClients.RecepcionMessages();
+		std::thread tReceive(&PeerClient::RecepcionMessages, &myClients);
+		tReceive.detach();
+		while (myClients.inGame)
+		{
+			/*if (myClients.inGame){myClients.myGame.Update(); }*/
+		}
 	}
 	else
 	{
