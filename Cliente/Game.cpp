@@ -217,8 +217,8 @@ void Game::Update()
 		if (currTurn == turnPos)
 		{
 			FamilyComplete();
-			ShowCards();
 			CheckTurn();
+			ShowCards();
 			// 1 Pide carta CheckTurn()
 			// 2 Se comprueba que tenga la carta
 			// 3 if(tiene carta) FamilyComplete() y vuelve a pedir carta (1)
